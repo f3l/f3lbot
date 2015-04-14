@@ -37,7 +37,14 @@ returns: dictionary containing the JSON-Data
 	@botcmd
 	def aur_search(self,msg,args):
 		"""Searches for AUR packages"""
-		return "Not implemented yet."
+		query_content=self.__query_api(args,"search")
+		if query_content["resultcount"] == 0:
+			return "No package matching your query found"
+		else:
+			query_str= str(query_content["resultcount"]) + " matching packages found.\n"
+			for query_elem in query_content["results"]:
+				query_str+= query_elem["Name"] + ":\t" + query_elem["Description"]+"\n"
+			return query_str
 
 	@botcmd
 	def aur_maint(self,msg,args):
