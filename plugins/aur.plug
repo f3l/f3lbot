@@ -1,0 +1,10 @@
+[Core]
+Name = Aur
+Module = aur
+
+[Python]
+Version = 3
+
+[Documentation]
+Description = "Query AUR for packages and maintainers"
+
