@@ -27,6 +27,8 @@ returns: dictionary containing the JSON-Data
 	@botcmd
 	def aur_info(self,msg,args):
 		"""Print Package description, if it exists"""
+		if args=="":
+			return "Please specify a keyword."
 		query_content=self.__query_api(args,"info")
 		if query_content["resultcount"]==1:
 			query_package=query_content["results"]
@@ -37,6 +39,8 @@ returns: dictionary containing the JSON-Data
 	@botcmd
 	def aur_search(self,msg,args):
 		"""Searches for AUR packages"""
+		if args=="":
+			return "Please specify a keyword."
 		query_content=self.__query_api(args,"search")
 		if query_content["resultcount"] == 0:
 			return "No package matching your query found"
@@ -49,5 +53,13 @@ returns: dictionary containing the JSON-Data
 	@botcmd
 	def aur_maint(self,msg,args):
 		"""Searches for AUR Maintainers"""
-		return "Not implemented yet."
-	
+		if args=="":
+			return "Please specify a keyword."
+		query_content=self.__query_api(args,"msearch")
+		if query_content["resultcount"] == 0:
+			return "No packages maintained by "+args+" found."
+		else:
+			query_str= str(query_content["resultcount"]) + " packages maintained by "+args+" found.\n"
+			for query_elem in query_content["results"]:
+				query_str += query_elem["Name"] + ":\t" + query_elem["Description"]+"\n"
+			return query_str
