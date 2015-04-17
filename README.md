@@ -13,4 +13,4 @@ A collection of ErrBot-Extensions made for F3L.
 * Beer: beer for several users
 * F3L-Service Overview
 * F3L-Gitlab webhook
-
+* Pkg: Merge Arch with Aur, add multi-search
