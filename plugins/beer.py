@@ -15,10 +15,10 @@ class Beer(BotPlugin):
 		"""Get beer from the cellar, optional specify properties"""
 		return "/me goes to the cellar and returns, carrying a{}beer for {}.".format(self.__printargs(args),utils.get_sender_username(msg))
 	
-	@re_botcmd(pattern=r"(^| )b(i|e)er?( |$)", prefixed=False, flags=re.IGNORECASE)
-	def listen_beer(self,msg,match):
-		"""Did Someone mention Beer?"""
-		return "We DO have beer, just tell me with !beer"
+	# @re_botcmd(pattern=r"(^| )b(i|e)er?( |$)", prefixed=False, flags=re.IGNORECASE)
+	# def listen_beer(self,msg,match):
+	# 	"""Did Someone mention Beer?"""
+	# 	return "We DO have beer, just tell me with !beer"
 
 	@botcmd(split_args_with=None)
 	def beer_for(self,msg,args):
