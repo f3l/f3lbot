@@ -32,7 +32,7 @@ returns: dictionary containing the JSON-Data
 		if len(query_packages)==0:
 			return args + " was not found, or something else went wrong. Sorry."
 		else:
-			return query_packages[1]["pkgname"] + ":\n" + query_package"pkgdesc"]
+			return query_packages[1]["pkgname"] + ":\n" + query_packages[1]["pkgdesc"]
 
 
 	@botcmd
