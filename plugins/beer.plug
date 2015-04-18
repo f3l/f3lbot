@@ -1,9 +1,0 @@
-[Core]
-Name = Beer
-Module = beer
-
-[Python]
-Version = 3
-
-[Documentation]
-Description = "Simple Beer-Test-Plugin"

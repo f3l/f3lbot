@@ -1,0 +1,9 @@
+[Core]
+Name = Give
+Module = give
+
+[Python]
+Version = 3
+
+[Documentation]
+Description = "'Give' things to others"
