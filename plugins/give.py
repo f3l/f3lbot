@@ -67,7 +67,7 @@ class Give(BotPlugin):
 	def give_to(self,msg,args):
 		"""Give 'something' to 'someone'"""
 		num=self.__evalto(args)
-		return "/me give a{}to {}".format(self.__printargs(args[2*num-1:]),self.__printto(args,num))
+		return "/me gives{}to {}".format(self.__printargs(args[2*num-1:]),self.__printto(args,num))
 
 	@re_botcmd(pattern=r"(^| )b(i|e)er?( |$)", prefixed=False, flags=re.IGNORECASE)
 	def listen_beer(self,msg,match):
