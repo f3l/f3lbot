@@ -1,0 +1,9 @@
+[Core]
+Name = Pkg
+Module = pkg
+
+[Python]
+Version = 3
+
+[Documentation]
+Description = "Query Arch-Repos for packages and maintainers"
