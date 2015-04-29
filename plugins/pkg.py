@@ -9,6 +9,15 @@ class Pkg(BotPlugin):
     #
 
     def __print_packages(self,results,repo=False,sep="/",preamb=""):
+        """Convert parsed JSON from below into a printable form.
+
+        results: Output of __parse_* from this module
+        repo: (Bool) Whether the repo of the packages should be printed
+        sep: Separator between repo and package
+        preamb: A preamble string
+
+        returns: String
+        """
         pkgstrings=[]
         if repo:
             for i in results:
@@ -17,7 +26,7 @@ class Pkg(BotPlugin):
             for i in results:
                 pkgstrings.append(i["name"]+":\t"+i["desc"])
         return preamb+"\n".join(pkgstrings)
-    
+
     # Aur-Stuff
     #
 
@@ -41,11 +50,10 @@ class Pkg(BotPlugin):
 
     def __parse_aur_multi(self,json):
         """Parse AUR-Jsonobject and prepare for print
-        Wants:
-          json: interpreted handle from __query_aur
-        
-        Returns:
-          Array of dicts with "name", "desc" and "repo"="aur"
+
+        json: interpreted handle from __query_aur
+
+        returns: Array of dicts with "name", "desc" and "repo"="aur"
         """
         retval=[]
         for i in json['results']:
@@ -54,10 +62,16 @@ class Pkg(BotPlugin):
 
     def __parse_aur_single(self,json):
         return {"name":json["Name"],"desc":json["Description"],"repo":"aur"}
-    
+
     @botcmd
     def aur_info(self,msg,args):
-        """Print Package description, if it exists"""
+        """Print Package description, if it exists
+
+        msg: Message as passed by ErrBot
+        args: Arguments as passed by ErrBot
+
+        returns: String (either error or query result)
+        """
         if args=="":
             return "Please specify a keyword."
         query_content=self.__query_aur(args,"info")
@@ -71,7 +85,13 @@ class Pkg(BotPlugin):
 
     @botcmd
     def aur_search(self,msg,args):
-        """Searches for AUR packages"""
+        """Searches for AUR packages
+
+        msg: Message as passed by ErrBot
+        args: Arguments as passed by ErrBot
+
+        returns: String (either error or query result)
+        """
         if args=="":
             return "Please specify a keyword."
         query_content=self.__query_aur(args,"search")
@@ -84,7 +104,13 @@ class Pkg(BotPlugin):
 
     @botcmd
     def aur_maint(self,msg,args):
-        """Searches for AUR Maintainers"""
+        """Searches for AUR Maintainers
+
+        msg: Message as passed by ErrBot
+        args: Arguments as passed by ErrBot
+
+        returns: String (either error or query result)
+        """
         if args=="":
             return "Please specify a keyword."
         query_content=self.__query_aur(args,"msearch")
@@ -117,20 +143,25 @@ class Pkg(BotPlugin):
 
     def __parse_arch_multi(self,json):
         """Parse AUR-Jsonobject and prepare for print
-        Wants:
-          json: interpreted handle from __query_aur
-        
-        Returns:
-          Array of dicts with "name", "desc" and "repo"="aur"
+
+        json: interpreted handle from __query_aur
+
+        returns: Array of dicts with "name", "desc" and "repo"="aur"
         """
         retval=[]
         for i in json:
             retval.append({"name":i["pkgname"],"desc":i["pkgdesc"],"repo":i["repo"]})
         return retval
-    
+
     @botcmd
     def arch_info(self,msg,args):
-        """Print Package description, if it exists"""
+        """Print Package description, if it exists
+
+        msg: Message as passed by ErrBot
+        args: Arguments as passed by ErrBot
+
+        returns: String (either error or query result)
+        """
         if args=="":
             return "Please specify a keyword."
         query_content=self.__query_arch(args,"name")
@@ -143,7 +174,13 @@ class Pkg(BotPlugin):
 
     @botcmd
     def arch_search(self,msg,args):
-        """Searches for Arch packages"""
+        """Searches for Arch packages
+
+        msg: Message as passed by ErrBot
+        args: Arguments as passed by ErrBot
+
+        returns: String (either error or query result)
+        """
         if args=="":
             return "Please specify a keyword."
         query_content=self.__query_arch(args,"q")
@@ -155,10 +192,16 @@ class Pkg(BotPlugin):
             return self.__print_packages(query_packages,
                                          repo=True,
                                          preamb=str(len(query_packages)) + " matching packages found.\n")
-        
+
     @botcmd
     def arch_maint(self,msg,args):
-        """Searches for ARCH Maintainers"""
+        """Searches for ARCH Maintainers
+
+        msg: Message as passed by ErrBot
+        args: Arguments as passed by ErrBot
+
+        returns: String (either error or query result)
+        """
         if args=="":
             return "Please specify a keyword."
         query_content=self.__query_arch(args,"maintainer")
@@ -177,10 +220,17 @@ class Pkg(BotPlugin):
 
     @botcmd
     def pkg_search(self,msg,args):
+        """Search Arch-Repos + Aur.
+
+        msg: Message as passed by ErrBot
+        args: Arguments as passed by ErrBot
+
+        returns: String (either error or query result)
+        """
         if args=="":
             return "Please specify a keyword."
         res_parsed=[]
-        
+
         # First, query Arch
         query_content=self.__query_arch(args,"q")
         query_content=query_content["results"]
