@@ -5,6 +5,19 @@ import requests
 class Pkg(BotPlugin):
     """Search and query Arch-Repos via XMPP"""
 
+    # Global Stuff
+    #
+
+    def __print_packages(self,results,repo=False,sep="/",preamb=""):
+        pkgstrings=[]
+        if repo:
+            for i in results:
+                pkgstrings.append(i["repo"]+sep+i["name"]+":\t"+i["desc"])
+        else:
+            for i in results:
+                pkgstrings.append(i["name"]+":\t"+i["desc"])
+        return preamb+"\n".join(pkgstrings)
+    
     # Aur-Stuff
     #
 
@@ -26,16 +39,33 @@ class Pkg(BotPlugin):
         )
         return query_handle.json()
 
+    def __parse_aur_multi(self,json):
+        """Parse AUR-Jsonobject and prepare for print
+        Wants:
+          json: interpreted handle from __query_aur
+        
+        Returns:
+          Array of dicts with "name", "desc" and "repo"="aur"
+        """
+        retval=[]
+        for i in json['results']:
+            retval.append(self.__parse_aur_single(i))
+        return retval
 
+    def __parse_aur_single(self,json):
+        return {"name":json["Name"],"desc":json["Description"],"repo":"aur"}
+    
     @botcmd
     def aur_info(self,msg,args):
         """Print Package description, if it exists"""
         if args=="":
             return "Please specify a keyword."
         query_content=self.__query_aur(args,"info")
+#        return query_content
         if query_content["resultcount"]==1:
-            query_package=query_content["results"]
-            return query_package["Name"] + ":\n" + query_package["Description"]
+            # Evil hack: AUR parses this shit different if only one result…
+            query_parsed=[self.__parse_aur_single(query_content["results"])]
+            return self.__print_packages(query_parsed)
         else:
             return args + " was not found, or something else went wrong. Sorry."
 
@@ -48,10 +78,9 @@ class Pkg(BotPlugin):
         if query_content["resultcount"] == 0:
             return "No package matching your query found"
         else:
-            query_str= str(query_content["resultcount"]) + " matching packages found.\n"
-            for query_elem in query_content["results"]:
-                query_str+= query_elem["Name"] + ":\t" + query_elem["Description"]+"\n"
-            return query_str
+            query_parsed=self.__parse_aur_multi(query_content)
+            return self.__print_packages(query_parsed,
+                                         preamb=str(query_content["resultcount"]) + " matching packages found.\n")
 
     @botcmd
     def aur_maint(self,msg,args):
@@ -62,10 +91,9 @@ class Pkg(BotPlugin):
         if query_content["resultcount"] == 0:
             return "No packages maintained by "+args+" found."
         else:
-            query_str= str(query_content["resultcount"]) + " packages maintained by "+args+" found.\n"
-            for query_elem in query_content["results"]:
-                query_str += query_elem["Name"] + ":\t" + query_elem["Description"]+"\n"
-            return query_str
+            query_parsed=self.__parse_aur_multi(query_content)
+            return self.__print_packages(query_parsed,
+                                         preamb=str(query_content["resultcount"]) + " packages maintained by "+args+" found.\n")
 
     # Arch-Stuff
     #
@@ -80,12 +108,26 @@ class Pkg(BotPlugin):
         """
         query_handle = requests.get(
             "https://www.archlinux.org/packages/search/json/?" + urlencode({
-                query_type: query
+                query_type: query,
+                "arch": "x86_64",
             },
             doseq=True)
         )
         return query_handle.json()
 
+    def __parse_arch_multi(self,json):
+        """Parse AUR-Jsonobject and prepare for print
+        Wants:
+          json: interpreted handle from __query_aur
+        
+        Returns:
+          Array of dicts with "name", "desc" and "repo"="aur"
+        """
+        retval=[]
+        for i in json:
+            retval.append({"name":i["pkgname"],"desc":i["pkgdesc"],"repo":i["repo"]})
+        return retval
+    
     @botcmd
     def arch_info(self,msg,args):
         """Print Package description, if it exists"""
@@ -96,7 +138,8 @@ class Pkg(BotPlugin):
         if len(query_packages)==0:
             return args + " was not found, or something else went wrong. Sorry."
         else:
-            return query_packages[1]["pkgname"] + ":\n" + query_packages[1]["pkgdesc"]
+            query_packages=self.__parse_arch_multi(query_packages)
+            return self.__print_packages(query_packages,repo=True)
 
     @botcmd
     def arch_search(self,msg,args):
@@ -108,11 +151,11 @@ class Pkg(BotPlugin):
         if len(query_packages) == 0:
             return "No package matching your query found"
         else:
-            query_str= str(len(query_packages)) + " matching packages found.\n"
-            for query_elem in query_packages:
-                query_str+= query_elem["repo"]+"/"+query_elem["pkgname"] + ":\t" + query_elem["pkgdesc"]+"\n"
-            return query_str
-
+            query_packages=self.__parse_arch_multi(query_packages)
+            return self.__print_packages(query_packages,
+                                         repo=True,
+                                         preamb=str(len(query_packages)) + " matching packages found.\n")
+        
     @botcmd
     def arch_maint(self,msg,args):
         """Searches for ARCH Maintainers"""
@@ -123,7 +166,35 @@ class Pkg(BotPlugin):
         if len(query_packages) == 0:
             return "No packages maintained by "+args+" found."
         else:
-            query_str= str(len(query_packages)) + " packages maintained by "+args+" found.\n"
-            for query_elem in query_packages:
-                query_str += query_elem["repo"]+"/"+query_elem["pkgname"] + ":\t" + query_elem["pkgdesc"]+"\n"
-            return query_str
+            query_packages=self.__parse_arch_multi(query_packages)
+            return self.__print_packages(query_packages,
+                                         preamb=str(len(query_packages)) + " packages maintained by "+args+" found.\n")
+
+
+    # Multi Stuff
+    #
+    # Fucking ugly…
+
+    @botcmd
+    def pkg_search(self,msg,args):
+        if args=="":
+            return "Please specify a keyword."
+        res_parsed=[]
+        
+        # First, query Arch
+        query_content=self.__query_arch(args,"q")
+        query_content=query_content["results"]
+        if len(query_content) != 0:
+            res_parsed+=self.__parse_arch_multi(query_content)
+
+        # Then, Aur
+        query_content=self.__query_aur(args,"search")
+        if query_content["resultcount"] != 0:
+            res_parsed+=self.__parse_aur_multi(query_content)
+
+        if len(res_parsed) == 0:
+            return "Sorry, no matching packages found."
+        else:
+            return self.__print_packages(res_parsed,
+                                         repo=True,
+                                         preamb=str(len(res_parsed))+" matching packages found.\n")
