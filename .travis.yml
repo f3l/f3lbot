@@ -5,9 +5,8 @@ python:
   - 3.4
 install:
   - pip install -q err pytest pytest-pep8 requests --use-wheel
+  - pip install -q coverage --use-wheel
 script:
   - coverage run --source plugins -m py.test --pep8
-after_success:
-  - coveralls
 notifications:
   email: false
