@@ -40,7 +40,7 @@ for gbin.'
     def test_beer_2(self, testbot):
         push_message('!beer cool buechenbacher')
         expected = '/me goes to the cellar and returns, carrying a cool \
-büchenbacher beer for gbin.'
+buechenbacher beer for gbin.'
         result = pop_message()
         assert expected in result
 
@@ -53,9 +53,9 @@ for asdil1991.'
 
     def test_beer_for_2(self, testbot):
         push_message('!beer for asdil1991 and pheerai and asdil12 \
-cool Büchenbacher')
+cool Buechenbacher')
         expected = '/me goes to the cellar and returns, carrying a \
-cool Büchenbacher beer for asdil1991 and pheerai and asdil12.'
+cool Buechenbacher beer for asdil1991 and pheerai and asdil12.'
         result = pop_message()
         assert expected in result
 
