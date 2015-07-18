@@ -11,7 +11,7 @@ class TestGive(object):
         result = [
             plugin._Give__evalto(['asdil1991']),
             plugin._Give__evalto(['asdil1991', 'and', 'pheerai',
-                                  'and', 'asdil12', 'cool', 'büchenbacher'])
+                                  'and', 'asdil12', 'cool', 'buechenbacher'])
         ]
         assert result == expected
 
@@ -38,7 +38,7 @@ for gbin.'
         assert expected in result
 
     def test_beer_2(self, testbot):
-        push_message('!beer cool büchenbacher')
+        push_message('!beer cool buechenbacher')
         expected = '/me goes to the cellar and returns, carrying a cool \
 büchenbacher beer for gbin.'
         result = pop_message()
@@ -86,7 +86,7 @@ and asdil12.'
         assert expected in result
 
     def test_listen_beer(self, testbot):
-        push_message('Ich trinke ein kühles Bier')
+        push_message('Ich trinke ein kuehles Bier')
         expected = 'We DO have beer, just tell me with !beer'
         result = pop_message()
         assert expected in result
