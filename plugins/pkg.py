@@ -99,8 +99,10 @@ class Pkg(BotPlugin):
             return "No package matching your query found"
         else:
             query_parsed=self.__parse_aur_multi(query_content)
-            return self.__print_packages(query_parsed,
-                                         preamb=str(query_content["resultcount"]) + " matching packages found.\n")
+            return self.__print_packages(
+                query_parsed,
+                preamb=str(query_content["resultcount"]) + " matching packages found.\n"
+            )
 
     @botcmd
     def aur_maint(self,msg,args):
@@ -118,8 +120,10 @@ class Pkg(BotPlugin):
             return "No packages maintained by "+args+" found."
         else:
             query_parsed=self.__parse_aur_multi(query_content)
-            return self.__print_packages(query_parsed,
-                                         preamb=str(query_content["resultcount"]) + " packages maintained by "+args+" found.\n")
+            return self.__print_packages(
+                query_parsed,
+                preamb=str(query_content["resultcount"]) + " packages maintained by "+args+" found.\n"
+            )
 
     # Arch-Stuff
     #
@@ -189,9 +193,11 @@ class Pkg(BotPlugin):
             return "No package matching your query found"
         else:
             query_packages=self.__parse_arch_multi(query_packages)
-            return self.__print_packages(query_packages,
-                                         repo=True,
-                                         preamb=str(len(query_packages)) + " matching packages found.\n")
+            return self.__print_packages(
+                query_packages,
+                repo=True,
+                preamb=str(len(query_packages)) + " matching packages found.\n"
+            )
 
     @botcmd
     def arch_maint(self,msg,args):
@@ -210,8 +216,10 @@ class Pkg(BotPlugin):
             return "No packages maintained by "+args+" found."
         else:
             query_packages=self.__parse_arch_multi(query_packages)
-            return self.__print_packages(query_packages,
-                                         preamb=str(len(query_packages)) + " packages maintained by "+args+" found.\n")
+            return self.__print_packages(
+                query_packages,
+                preamb=str(len(query_packages)) + " packages maintained by "+args+" found.\n"
+            )
 
 
     # Multi Stuff
@@ -245,6 +253,8 @@ class Pkg(BotPlugin):
         if len(res_parsed) == 0:
             return "Sorry, no matching packages found."
         else:
-            return self.__print_packages(res_parsed,
-                                         repo=True,
-                                         preamb=str(len(res_parsed))+" matching packages found.\n")
+            return self.__print_packages(
+                res_parsed,
+                repo=True,
+                preamb=str(len(res_parsed))+" matching packages found.\n"
+            )

@@ -50,24 +50,36 @@ class Give(BotPlugin):
 	@botcmd(split_args_with=None)
 	def beer(self,msg,args):
 		"""Get beer from the cellar, optional specify properties"""
-		return "/me goes to the cellar and returns, carrying a{}beer for {}.".format(self.__printargs(args),utils.get_sender_username(msg))
+		return "/me goes to the cellar and returns, carrying a{}beer for {}.".format(
+                        self.__printargs(args),
+                        utils.get_sender_username(msg),
+                )
 	
 	@botcmd(split_args_with=None)
 	def beer_for(self,msg,args):
 		"""Get beer from the cellar, hand to someone else"""
 		num=self.__evalto(args)
-		return "/me goes to the cellar and returns, carrying a{}beer for {}.".format(self.__printargs(args[2*num-1:]),self.__printto(args,num))
+		return "/me goes to the cellar and returns, carrying a{}beer for {}.".format(
+                        self.__printargs(args[2*num-1:]),
+                        self.__printto(args,num),
+                )
 	
 	@botcmd(split_args_with=None)
 	def give(self,msg,args):
 		"""Give 'something' to yourself"""
-		return "/me gives a{}to {}".format(self.__printargs(args),utils.get_sender_username(msg))
+		return "/me gives a{}to {}".format(
+                        self.__printargs(args),
+                        utils.get_sender_username(msg)
+                )
 
 	@botcmd(split_args_with=None)
 	def give_to(self,msg,args):
 		"""Give 'something' to 'someone'"""
 		num=self.__evalto(args)
-		return "/me gives{}to {}".format(self.__printargs(args[2*num-1:]),self.__printto(args,num))
+		return "/me gives{}to {}".format(
+                        self.__printargs(args[2*num-1:]),
+                        self.__printto(args,num)
+                )
 
 	@re_botcmd(pattern=r"(^| )b(i|e)er?( |$)", prefixed=False, flags=re.IGNORECASE)
 	def listen_beer(self,msg,match):
