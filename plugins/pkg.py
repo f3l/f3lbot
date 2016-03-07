@@ -117,7 +117,7 @@ went wrong. Sorry."
             return "Please specify a keyword."
         query_content = self.__query_aur(args, "search")
         if query_content["resultcount"] == 0:
-            return "No package matching your query found"
+            return "No package matching your query found."
         else:
             query_parsed = self.__parse_aur_multi(query_content)
             return self.__print_packages(
@@ -217,7 +217,7 @@ went wrong. Sorry."
         query_content = self.__query_arch(args, "q")
         query_packages = query_content["results"]
         if len(query_packages) == 0:
-            return "No package matching your query found"
+            return "No package matching your query found."
         else:
             query_packages = self.__parse_arch_multi(query_packages)
             return self.__print_packages(

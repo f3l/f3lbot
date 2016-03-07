@@ -80,6 +80,19 @@ Behringer X32 consoles'
         result = testbot.pop_message()
         assert expected in result
 
+    def test_aur_info_empty(self, testbot):
+        testbot.push_message('!aur info')
+        expected = 'Please specify a keyword.'
+        result = testbot.pop_message()
+        assert expected == result
+
+    def test_aur_info_invalid(self, testbot):
+        testbot.push_message('!aur info foobar_baz')
+        expected = 'foobar_baz was not found, \
+or something else went wrong. Sorry.'
+        result = testbot.pop_message()
+        assert expected == result
+
     def test_aur_search(self, testbot):
         testbot.push_message('!aur search x32edit')
         expected1 = '1 matching packages found.\n\
@@ -89,11 +102,35 @@ Behringer X32 consoles'
         testbot.push_message('!aur search beets')
         assert expected1 in result1
 
+    def test_aur_seach_empty(self, testbot):
+        testbot.push_message('!aur search')
+        expected = 'Please specify a keyword.'
+        result = testbot.pop_message()
+        assert expected == result
+
+    def test_aur_seach_invalid(self, testbot):
+        testbot.push_message('!aur search foobarbaz')
+        expected = 'No package matching your query found.'
+        result = testbot.pop_message()
+        assert expected == result
+
     def test_aur_maint(self, testbot):
         testbot.push_message('!aur maint pheerai')
         expected = 'packages maintained by pheerai found.\n'
         result = testbot.pop_message()
         assert expected in result
+
+    def test_aur_maint_empty(self, testbot):
+        testbot.push_message('!aur maint')
+        expected = 'Please specify a keyword.'
+        result = testbot.pop_message()
+        assert expected == result
+
+    def test_aur_maint_invalid(self, testbot):
+        testbot.push_message('!aur maint foobarbaz')
+        expected = 'No packages maintained by foobarbaz found.'
+        result = testbot.pop_message()
+        assert expected == result
 
     def test_query_arch(self, testbot):
         plugin = testbot.bot.get_plugin_obj_by_name('Pkg')
@@ -118,6 +155,19 @@ historically-based real-time strategy game'
         result = testbot.pop_message()
         assert expected in result
 
+    def test_arch_info_empty(self, testbot):
+        testbot.push_message('!arch info')
+        expected = 'Please specify a keyword.'
+        result = testbot.pop_message()
+        assert expected == result
+
+    def test_arch_info_invalid(self, testbot):
+        testbot.push_message('!arch info foobarbaz')
+        expected = 'foobarbaz was not found, or something \
+else went wrong. Sorry.'
+        result = testbot.pop_message()
+        assert expected == result
+
     def test_arch_search(self, testbot):
         testbot.push_message('!arch search 0ad')
         # Using the Messages, \t gets replaced.
@@ -127,16 +177,53 @@ real-time strategy game"
         result = testbot.pop_message()
         assert expected in result
 
+    def test_arch_search_empty(self, testbot):
+        testbot.push_message('!arch search')
+        expected = 'Please specify a keyword.'
+        result = testbot.pop_message()
+        assert expected == result
+
+    def test_arch_search_invalid(self, testbot):
+        testbot.push_message('!arch search foobarbaz')
+        expected = 'No package matching your query found.'
+        result = testbot.pop_message()
+        assert expected == result
+
     def test_arch_maint(self, testbot):
-        testbot.push_message('!arch maint pheerai')
-        expected = 'No packages maintained by pheerai found.'
+        testbot.push_message('!arch maint faidoc')
+        expected = ' packages maintained by faidoc found.\n\
+cinnamon'
         result = testbot.pop_message()
         assert expected in result
+
+    def test_arch_maint_empty(self, testbot):
+        testbot.push_message('!arch maint')
+        expected = 'Please specify a keyword.'
+        result = testbot.pop_message()
+        assert expected == result
+
+    def test_arch_maint_invalid(self, testbot):
+        testbot.push_message('!arch maint foobarbaz')
+        expected = 'No packages maintained by foobarbaz found.'
+        result = testbot.pop_message()
+        assert expected == result
 
     def test_pkg_search(self, testbot):
         testbot.push_message('!pkg search python-systemd')
         expected = '2 matching packages found.\n\
 extra/python-systemd:   Python bindings for systemd\n\
 aur/python-systemd-git: Systemd python bindings'
+        result = testbot.pop_message()
+        assert expected == result
+
+    def test_pkg_search_empty(self, testbot):
+        testbot.push_message('!pkg search')
+        expected = 'Please specify a keyword.'
+        result = testbot.pop_message()
+        assert expected == result
+
+    def test_pkg_search_invalid(self, testbot):
+        testbot.push_message('!pkg search foobarbaz')
+        expected = 'Sorry, no matching packages found.'
         result = testbot.pop_message()
         assert expected == result

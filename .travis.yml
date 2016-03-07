@@ -10,3 +10,5 @@ script:
   - coverage run --source plugins -m py.test --pep8
 notifications:
   email: false
+after_success:
+  coveralls
