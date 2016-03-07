@@ -2,6 +2,7 @@ language: python
 python:
   - 3.3
   - 3.4
+  - 3.5
 install:
   - pip install -q err pytest pytest-pep8 requests --use-wheel
   - pip install -q coverage --use-wheel
