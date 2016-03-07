@@ -1,0 +1,6 @@
+before_script:
+  - pip-install -q err pytest pytest-pep8 requests coverage --use-whell
+
+errbot:
+  script:
+    - coverage run --source plugins -m py.test --pep8
