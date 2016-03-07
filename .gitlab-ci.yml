@@ -1,5 +1,6 @@
 before_script:
-  - pip-install -q err pytest pytest-pep8 requests coverage --use-whell
+  - apt-get install -qq -y python3 python-pip
+  - pip3 install -q err pytest pytest-pep8 requests coverage --use-wheel
 
 errbot:
   script:
