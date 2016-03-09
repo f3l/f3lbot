@@ -70,7 +70,7 @@ class Give(BotPlugin):
         """Get beer from the cellar, optional specify properties"""
         return "/me goes to the cellar and returns, carrying a{}beer \
 for {}.".format(self.__printargs(args),
-                msg.frm.nick,)
+                msg.frm.resource if msg.type == 'groupchat' else msg.frm.nick)
 
     @botcmd(split_args_with=None)
     def beer_for(self, msg, args):
@@ -87,8 +87,7 @@ carrying a{}beer for {}.".format(
         """Give 'something' to yourself"""
         return "/me gives a{}to {}.".format(
             self.__printargs(args),
-            msg.frm.nick
-        )
+            msg.frm.resource if msg.type == 'groupchat' else msg.frm.nick)
 
     @botcmd(split_args_with=None)
     def give_to(self, msg, args):
