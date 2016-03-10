@@ -25,7 +25,7 @@ class Evil(BotPlugin):
     __klug_items = ["einen Lolli", "einen Keks", "einen Orden",
                     "eine goldene Waschmaschine"]
 
-    def get_klug_items(self):
+    def get_klug_items(self):  # pragma: no cover
         index = randrange(0, len(self.__klug_items))
         return self.__klug_items[index]
 

@@ -32,7 +32,7 @@ class TestEvil(object):
     def test_klug_nick(self, testbot):
         # Nick specified
         testbot.push_message('!klug pheerai')
-        expected = 'Kluges pheerai! Hier hast du einen '
+        expected = 'Kluges pheerai! Hier hast du '
         result = testbot.pop_message()
         assert expected in result
 
