@@ -28,8 +28,31 @@ class TestEvil(object):
         result = testbot.pop_message()
         print(result)
         assert expected == result
+
+    def test_klug_nick(self, testbot):
         # Nick specified
         testbot.push_message('!klug pheerai')
         expected = 'Kluges pheerai! Hier hast du einen '
+        result = testbot.pop_message()
+        assert expected in result
+
+    def test_next(self, testbot):
+        expected = "Ein weiter zufriedener Kunde. NÄCHSTER!"
+        testbot.push_message('!next')
+        result = testbot.pop_message()
+        assert expected == result
+
+    def test_armer(self, testbot):
+        # empty
+        testbot.push_message('!armer')
+        expected = 'Oooh. Hast du dir weh getan?'
+        result = testbot.pop_message()
+        print(result)
+        assert expected == result
+
+    def test_klug_nick(self, testbot):
+        # Nick specified
+        testbot.push_message('!armer pheerai')
+        expected = 'Armes pheerai. Brauchst du ein Taschentuch?'
         result = testbot.pop_message()
         assert expected in result

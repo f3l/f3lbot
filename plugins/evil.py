@@ -15,14 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from errbot import BotPlugin, botcmd, utils
+from errbot import BotPlugin, botcmd
 from random import randrange
 
 
 class Evil(BotPlugin):
     """Evil little bastard stuff"""
 
-    __klug_items = ["Lolli", "Keks", "Orden"]
+    __klug_items = ["einen Lolli", "einen Keks", "einen Orden",
+                    "eine goldene Waschmaschine"]
 
     def get_klug_items(self):
         index = randrange(0, len(self.__klug_items))
@@ -33,7 +34,20 @@ class Evil(BotPlugin):
         """Tell someone how smart he is"""
         if args:
             name = args[0]
-            return "Kluges {0}! Hier hast du einen {1}!".format(
+            return "Kluges {0}! Hier hast du {1}!".format(
                 name, self.get_klug_items())
         else:
             return "Du bist so Kluk! K – L – U – K!"
+
+    @botcmd(split_args_with=None)
+    def next(self, msg, args):
+        """Everything done"""
+        return "Ein weiter zufriedener Kunde. NÄCHSTER!"
+
+    @botcmd(split_args_with=None)
+    def armer(self, msg, args):
+        """Poor person"""
+        if args:
+            return "Armes {0}. Brauchst du ein Taschentuch?".format(args[0])
+        else:
+            return "Oooh. Hast du dir weh getan?"
