@@ -50,7 +50,7 @@ class TestEvil(object):
         print(result)
         assert expected == result
 
-    def test_klug_nick(self, testbot):
+    def test_armer_nick(self, testbot):
         # Nick specified
         testbot.push_message('!armer pheerai')
         expected = 'Armes pheerai. Brauchst du ein Taschentuch?'
