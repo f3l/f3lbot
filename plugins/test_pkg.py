@@ -16,15 +16,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from errbot.backends.test import testbot
+from f3lhelpers import dialogtest
 
 
 class TestPkg(object):
     extra_plugin_dir = "."
 
+#    def __init__(self):
+#        self.plugin = testbot.bot.get_plugin_obj_by_name('Pkg')
+# Other globalised stuff…
+# I.E. Arch query for 0ad,…
+
     def test_print_packages(self, testbot):
         plugin = testbot.bot.get_plugin_obj_by_name('Pkg')
-        expected1 = 'test1:\tJust testing'
-        result1 = plugin._Pkg__print_packages(
+        # Single package
+        expected = 'test1:\tJust testing'
+        result = plugin._Pkg__print_packages(
             [
                 {
                     'repo': 'test1',
@@ -33,9 +40,11 @@ class TestPkg(object):
                 }
             ]
         )
-        expected2 = 'Foo!test1-test1:\tJust testing\ntest2-test2:\t\
+        assert expected == result
+        # Multi packages
+        expected = 'Foo!test1-test1:\tJust testing\ntest2-test2:\t\
 Also just testing'
-        result2 = plugin._Pkg__print_packages(
+        result = plugin._Pkg__print_packages(
             [
                 {
                     'repo': 'test1',
@@ -51,7 +60,7 @@ Also just testing'
             sep="-",
             preamb="Foo!"
         )
-        assert expected1 == result1 and expected2 == result2
+        assert expected == result
 
     def test_query_aur(self, testbot):
         plugin = testbot.bot.get_plugin_obj_by_name('Pkg')
@@ -59,78 +68,97 @@ Also just testing'
         assert type(result) is dict and type(result['results']) is dict
 
     def test_parse_aur_multi(self, testbot):
+        # Multiple returns
         plugin = testbot.bot.get_plugin_obj_by_name('Pkg')
         input = plugin._Pkg__query_aur('pheerai', 'msearch')
         result = plugin._Pkg__parse_aur_multi(input)
         assert type(result) is list \
             and type(result[1]) is dict \
             and type(result[1]["name"]) is str
-
-    def test_parse_aur_single(self, testbot):
+        # Single return
         plugin = testbot.bot.get_plugin_obj_by_name('Pkg')
         input = plugin._Pkg__query_aur('x32edit', 'info')
         result = plugin._Pkg__parse_aur_single(input["results"])
         assert type(result) is dict \
             and type(result["name"]) is str
 
+    # Here, the "ugly unit tests" start: They are
+    # __DEPENDENT ON OTHER SERVICES__
+    # (Don't like it, but hey…)
+
     def test_aur_info(self, testbot):
-        testbot.push_message('!aur info x32edit')
-        expected = 'x32edit:    Remote control and programm \
+        # Missing argument
+        dialogtest(
+            testbot,
+            '!aur info',
+            'Please specify a keyword.'
+        )
+
+        # With valid argument
+        dialogtest(
+            testbot,
+            '!aur info x32edit',
+            'x32edit:    Remote control and programm \
 Behringer X32 consoles'
-        result = testbot.pop_message()
-        assert expected in result
+        )
 
-    def test_aur_info_empty(self, testbot):
-        testbot.push_message('!aur info')
-        expected = 'Please specify a keyword.'
-        result = testbot.pop_message()
-        assert expected == result
-
-    def test_aur_info_invalid(self, testbot):
-        testbot.push_message('!aur info foobar_baz')
-        expected = 'foobar_baz was not found, \
+        # Valid argument, no result:
+        dialogtest(
+            testbot,
+            '!aur info foobar_baz',
+            'foobar_baz was not found, \
 or something else went wrong. Sorry.'
-        result = testbot.pop_message()
-        assert expected == result
+        )
 
     def test_aur_search(self, testbot):
-        testbot.push_message('!aur search x32edit')
-        expected1 = '1 matching packages found.\n\
+        # Missing argument
+        dialogtest(
+            testbot,
+            '!aur search',
+            'Please specify a keyword.'
+        )
+
+        # Valid argument + result:
+        dialogtest(
+            testbot,
+            '!aur search x32edit',
+            '1 matching packages found.\n\
 x32edit:    Remote control and programm \
 Behringer X32 consoles'
-        result1 = testbot.pop_message()
-        testbot.push_message('!aur search beets')
-        assert expected1 in result1
+        )
 
-    def test_aur_seach_empty(self, testbot):
-        testbot.push_message('!aur search')
-        expected = 'Please specify a keyword.'
-        result = testbot.pop_message()
-        assert expected == result
-
-    def test_aur_seach_invalid(self, testbot):
-        testbot.push_message('!aur search foobarbaz')
-        expected = 'No package matching your query found.'
-        result = testbot.pop_message()
-        assert expected == result
+        # No search result:
+        dialogtest(
+            testbot,
+            '!aur search foobarbaz',
+            'No package matching your query found.'
+        )
 
     def test_aur_maint(self, testbot):
-        testbot.push_message('!aur maint pheerai')
-        expected = 'packages maintained by pheerai found.\n'
-        result = testbot.pop_message()
-        assert expected in result
+        # Missing argument
+        dialogtest(
+            testbot,
+            '!aur maint',
+            'Please specify a keyword.'
+        )
 
-    def test_aur_maint_empty(self, testbot):
-        testbot.push_message('!aur maint')
-        expected = 'Please specify a keyword.'
-        result = testbot.pop_message()
-        assert expected == result
+        # Valid argument + result
+        dialogtest(
+            testbot,
+            '!aur maint pheerai',
+            '4 packages maintained by pheerai found.\n\
+x32edit:    Remote control and programm Behringer X32 consoles\n\
+python-pytest-pep8: pytest plugin to check PEP8 requirements.\n\
+xprofile:   A tool to manage and automatically apply xrandr configurations.\n\
+mergerfs:   Another FUSE union filesystem'
+        )
 
-    def test_aur_maint_invalid(self, testbot):
-        testbot.push_message('!aur maint foobarbaz')
-        expected = 'No packages maintained by foobarbaz found.'
-        result = testbot.pop_message()
-        assert expected == result
+        # Valid argument, no result
+        dialogtest(
+            testbot,
+            '!aur maint foobarbaz',
+            'No packages maintained by foobarbaz found.'
+        )
 
     def test_query_arch(self, testbot):
         plugin = testbot.bot.get_plugin_obj_by_name('Pkg')
@@ -142,88 +170,96 @@ Behringer X32 consoles'
 
     def test_parse_arch_multi(self, testbot):
         plugin = testbot.bot.get_plugin_obj_by_name('Pkg')
-        input = plugin._Pkg__query_arch('name', '0ad')
-        result = plugin._Pkg__parse_arch_multi(input["results"])
-        assert type(result) is list \
-            and type(result[0]) is dict \
-            and type(result[0]["name"]) is str
+        result = plugin._Pkg__query_arch('name', '0ad')
+        result2 = plugin._Pkg__parse_arch_multi(result["results"])
+        assert type(result2) is list \
+            and type(result2[0]) is dict \
+            and type(result2[0]["name"]) is str
 
     def test_arch_info(self, testbot):
-        testbot.push_message('!arch info 0ad')
-        expected = 'community/0ad:  Cross-platform, 3D and \
+        # No argument
+        dialogtest(
+            testbot,
+            '!arch info',
+            'Please specify a keyword.'
+        )
+
+        # Valid Argument, hit
+        dialogtest(
+            testbot,
+            '!arch info 0ad',
+            'community/0ad:  Cross-platform, 3D and \
 historically-based real-time strategy game'
-        result = testbot.pop_message()
-        assert expected in result
+        )
 
-    def test_arch_info_empty(self, testbot):
-        testbot.push_message('!arch info')
-        expected = 'Please specify a keyword.'
-        result = testbot.pop_message()
-        assert expected == result
-
-    def test_arch_info_invalid(self, testbot):
-        testbot.push_message('!arch info foobarbaz')
-        expected = 'foobarbaz was not found, or something \
+        # Valid Argument, no hit
+        dialogtest(
+            testbot,
+            '!arch info foobarbaz',
+            'foobarbaz was not found, or something \
 else went wrong. Sorry.'
-        result = testbot.pop_message()
-        assert expected == result
+        )
 
     def test_arch_search(self, testbot):
-        testbot.push_message('!arch search 0ad')
-        # Using the Messages, \t gets replaced.
-        expected = "1 matching packages found.\n\
+        # No Argument
+        dialogtest(
+            testbot,
+            '!arch search',
+            'Please specify a keyword.'
+        )
+
+        # Valid Argument, no hit
+        dialogtest(
+            testbot,
+            '!arch search 0ad',
+            # Using the Messages, \t gets replaced.
+            "1 matching packages found.\n\
 community/0ad:  Cross-platform, 3D and historically-based \
 real-time strategy game"
-        result = testbot.pop_message()
-        assert expected in result
+        )
 
-    def test_arch_search_empty(self, testbot):
-        testbot.push_message('!arch search')
-        expected = 'Please specify a keyword.'
-        result = testbot.pop_message()
-        assert expected == result
-
-    def test_arch_search_invalid(self, testbot):
-        testbot.push_message('!arch search foobarbaz')
-        expected = 'No package matching your query found.'
-        result = testbot.pop_message()
-        assert expected == result
+        # Valid arg, no result
+        dialogtest(
+            testbot,
+            '!arch search foobarbaz',
+            'No package matching your query found.'
+        )
 
     def test_arch_maint(self, testbot):
+        # No argument
+        dialogtest(
+            testbot,
+            '!arch maint',
+            'Please specify a keyword.'
+        )
+        # No Dialogtest, we want to map using in!
         testbot.push_message('!arch maint faidoc')
         expected = ' packages maintained by faidoc found.\n\
 cinnamon'
         result = testbot.pop_message()
         assert expected in result
-
-    def test_arch_maint_empty(self, testbot):
-        testbot.push_message('!arch maint')
-        expected = 'Please specify a keyword.'
-        result = testbot.pop_message()
-        assert expected == result
-
-    def test_arch_maint_invalid(self, testbot):
-        testbot.push_message('!arch maint foobarbaz')
-        expected = 'No packages maintained by foobarbaz found.'
-        result = testbot.pop_message()
-        assert expected == result
+        # Single arg without match
+        dialogtest(
+            testbot,
+            '!arch maint foobarbaz',
+            'No packages maintained by foobarbaz found.'
+        )
 
     def test_pkg_search(self, testbot):
-        testbot.push_message('!pkg search python-systemd')
-        expected = '2 matching packages found.\n\
+        dialogtest(
+            testbot,
+            '!pkg search',
+            'Please specify a keyword.'
+        )
+        dialogtest(
+            testbot,
+            '!pkg search python-systemd',
+            '2 matching packages found.\n\
 extra/python-systemd:   Python bindings for systemd\n\
 aur/python-systemd-git: Systemd python bindings'
-        result = testbot.pop_message()
-        assert expected == result
-
-    def test_pkg_search_empty(self, testbot):
-        testbot.push_message('!pkg search')
-        expected = 'Please specify a keyword.'
-        result = testbot.pop_message()
-        assert expected == result
-
-    def test_pkg_search_invalid(self, testbot):
-        testbot.push_message('!pkg search foobarbaz')
-        expected = 'Sorry, no matching packages found.'
-        result = testbot.pop_message()
-        assert expected == result
+        )
+        dialogtest(
+            testbot,
+            '!pkg search foobarbaz',
+            'Sorry, no matching packages found.'
+        )
