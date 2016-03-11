@@ -3,6 +3,7 @@ python:
   - 3.3
   - 3.4
   - 3.5
+cache: pip
 install:
   - pip install -q err pytest pytest-pep8 requests --use-wheel
   - pip install -q coverage coveralls --use-wheel
