@@ -3,7 +3,12 @@ python:
   - 3.3
   - 3.4
   - 3.5
-cache: pip
+cache:
+  - pip
+  - directories:
+      - /home/travis/virtualenv/python3.3
+      - /home/travis/virtualenv/python3.4
+      - /home/travis/virtualenv/python3.5
 install:
   - pip install -q err pytest pytest-pep8 requests --use-wheel
   - pip install -q coverage coveralls --use-wheel
