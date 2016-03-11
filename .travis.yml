@@ -6,9 +6,9 @@ python:
 cache:
   - pip
   - directories:
-      - /home/travis/virtualenv/python3.3
-      - /home/travis/virtualenv/python3.4
-      - /home/travis/virtualenv/python3.5
+      - /home/travis/virtualenv/python3.3.5
+      - /home/travis/virtualenv/python3.4.2
+      - /home/travis/virtualenv/python3.5.0
 install:
   - pip install -q err pytest pytest-pep8 requests --use-wheel
   - pip install -q coverage coveralls --use-wheel
