@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from errbot import BotPlugin, botcmd, utils, re_botcmd
+from f3lhelpers import chattername
 import re
 
 
@@ -70,7 +71,7 @@ class Give(BotPlugin):
         """Get beer from the cellar, optional specify properties"""
         return "/me goes to the cellar and returns, carrying a{}beer \
 for {}.".format(self.__printargs(args),
-                msg.frm.resource if msg.type == 'groupchat' else msg.frm.nick)
+                chattername(msg))
 
     @botcmd(split_args_with=None)
     def beer_for(self, msg, args):
@@ -87,7 +88,7 @@ carrying a{}beer for {}.".format(
         """Give 'something' to yourself"""
         return "/me gives a{}to {}.".format(
             self.__printargs(args),
-            msg.frm.resource if msg.type == 'groupchat' else msg.frm.nick)
+            chattername(msg))
 
     @botcmd(split_args_with=None)
     def give_to(self, msg, args):
