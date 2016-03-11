@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from errbot.backends.test import testbot
+from f3lhelpers import dialogtest
 
 
 class TestGive(object):
@@ -47,62 +48,66 @@ class TestGive(object):
         assert expected == result
 
     def test_beer_1(self, testbot):
-        testbot.push_message('!beer')
-        expected = '/me goes to the cellar and returns, carrying a beer \
-for '
-        result = testbot.pop_message()
-        assert expected in result
-
-    def test_beer_2(self, testbot):
-        testbot.push_message('!beer cool büchenbacher')
-        expected = '/me goes to the cellar and returns, carrying a cool \
-büchenbacher beer for '
-        result = testbot.pop_message()
-        assert expected in result
+        dialogtest(
+            testbot,
+            '!beer',
+            '/me goes to the cellar and returns, carrying a beer \
+for None.'
+        )
+        dialogtest(
+            testbot,
+            '!beer cool büchenbacher',
+            '/me goes to the cellar and returns, carrying a cool \
+büchenbacher beer for None.'
+        )
 
     def test_beer_for_1(self, testbot):
-        testbot.push_message('!beer for asdil1991')
-        expected = '/me goes to the cellar and returns, carrying a beer \
+        dialogtest(
+            testbot,
+            '!beer for asdil1991',
+            '/me goes to the cellar and returns, carrying a beer \
 for asdil1991.'
-        result = testbot.pop_message()
-        assert expected in result
+        )
 
     def test_beer_for_2(self, testbot):
-        testbot.push_message('!beer for asdil1991 and pheerai and asdil12 \
-cool Büchenbacher')
-        expected = '/me goes to the cellar and returns, carrying a \
+        dialogtest(
+            testbot,
+            '!beer for asdil1991 and pheerai and asdil12 \
+cool Büchenbacher',
+            '/me goes to the cellar and returns, carrying a \
 cool Büchenbacher beer for asdil1991 and pheerai and asdil12.'
-        result = testbot.pop_message()
-        assert expected in result
+            )
 
-    def test_give_1(self, testbot):
-        testbot.push_message('!give')
-        expected = '/me gives a to '
-        result = testbot.pop_message()
-        assert expected in result
+    def test_give(self, testbot):
+        dialogtest(
+            testbot,
+            '!give',
+            '/me gives a to None.'
+        )
+        dialogtest(
+            testbot,
+            '!give sweet chocolate',
+            '/me gives a sweet chocolate to None.'
+        )
 
-    def test_give_2(self, testbot):
-        testbot.push_message('!give sweet chocolate')
-        expected = '/me gives a sweet chocolate to '
-        result = testbot.pop_message()
-        assert expected in result
-
-    def test_give_to_1(self, testbot):
-        testbot.push_message('!give to asdil1991')
-        expected = '/me gives to asdil1991.'
-        result = testbot.pop_message()
-        assert expected in result
-
-    def test_give_to_2(self, testbot):
-        testbot.push_message('!give to asdil1991 and pheerai and asdil12 \
-salty gulasch')
-        expected = '/me gives salty gulasch to asdil1991 and pheerai \
+    def test_give_to(self, testbot):
+        # give to 1 person
+        dialogtest(
+            testbot,
+            '!give to asdil1991',
+            '/me gives to asdil1991.'
+        )
+        # Give to multiple persons
+        dialogtest(
+            testbot,
+            '!give to asdil1991 and pheerai and asdil12 \
+salty gulasch',
+            '/me gives salty gulasch to asdil1991 and pheerai \
 and asdil12.'
-        result = testbot.pop_message()
-        assert expected in result
+            )
 
     def test_listen_beer(self, testbot):
         testbot.push_message('Ich trinke ein kühles Bier')
         expected = 'We DO have beer, just tell me with !beer'
         result = testbot.pop_message()
-        assert expected in result
+        assert expected == result
