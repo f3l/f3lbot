@@ -4,7 +4,7 @@ python:
   - 3.4
   - 3.5
 cache:
-  - pip
+  - pip: true
   - directories:
       - /home/travis/virtualenv/python3.3.5
       - /home/travis/virtualenv/python3.4.2
