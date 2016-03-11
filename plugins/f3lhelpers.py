@@ -21,6 +21,18 @@ from errbot import BotPlugin, botcmd, utils
 def chattername(msg):
     """Returns the Nick of the sender of a message"""
     if msg.type == 'groupchat':
-        return msg.frm.resource
+        return msg.frm.resource  # pragma: no cover
     else:
         return msg.frm.nick
+
+
+def dialogtest(bot, msg, exp):
+    """Easy interface for tests if the form msg => reply
+    Arguments:
+        bot: A testbot instance
+        msg: The message to pass to bot
+        exp: Expected outcome
+    """
+    bot.push_message(msg)
+    result = bot.pop_message()
+    assert result == exp

@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from errbot.backends.test import testbot
+from f3lhelpers import dialogtest
 
 
 class TestEvil(object):
@@ -23,36 +24,70 @@ class TestEvil(object):
 
     def test_klug(self, testbot):
         # empty
-        testbot.push_message('!klug')
-        expected = 'Du bist so Kluk! K – L – U – K!'
-        result = testbot.pop_message()
-        print(result)
-        assert expected == result
-
-    def test_klug_nick(self, testbot):
-        # Nick specified
+        dialogtest(
+            testbot,
+            '!klug',
+            'Du bist so Kluk! K – L – U – K!'
+        )
+        # 1 arg:
+        # Random, thus "in"!
         testbot.push_message('!klug pheerai')
         expected = 'Kluges pheerai! Hier hast du '
         result = testbot.pop_message()
         assert expected in result
+        # 2 args:
+        dialogtest(
+            testbot,
+            '!klug pheerai asdil1991',
+            "Meine kleinen Schaltkreise können so viel Intelligenz \
+nicht verkraften!"
+        )
 
     def test_next(self, testbot):
-        expected = "Ein weiter zufriedener Kunde. NÄCHSTER!"
-        testbot.push_message('!next')
-        result = testbot.pop_message()
-        assert expected == result
+        dialogtest(
+            testbot,
+            '!next',
+            "Ein weiter zufriedener Kunde. NÄCHSTER!"
+        )
 
     def test_armer(self, testbot):
         # empty
-        testbot.push_message('!armer')
-        expected = 'Oooh. Hast du dir weh getan?'
-        result = testbot.pop_message()
-        print(result)
-        assert expected == result
-
-    def test_armer_nick(self, testbot):
+        dialogtest(
+            testbot,
+            '!armer',
+            'Oooh. Hast du dir weh getan?'
+        )
         # Nick specified
-        testbot.push_message('!armer pheerai')
-        expected = 'Armes pheerai. Brauchst du ein Taschentuch?'
+        dialogtest(
+            testbot,
+            '!armer pheerai',
+            'Armes pheerai. Brauchst du ein Taschentuch?'
+        )
+        # Several nicks:
+        dialogtest(
+            testbot,
+            '!armer pheerai asdil1991',
+            'Braucht ihr Mitleid? Ich könnte welches vortäuschen…'
+        )
+
+    def test_easy(self, testbot):
+        dialogtest(
+            testbot,
+            '!easy',
+            'Das war ja einfach…'
+        )
+
+    def test_haha(self, testbot):
+        dialogtest(
+            testbot,
+            '!haha',
+            'Ha-ha! (© Nelson Muntz)'
+        )
+
+    def test_legendary(self, testbot):
+        # Has random, thus manually
+        plugin = testbot.bot.get_plugin_obj_by_name('Evil')
+        testbot.push_message("!legendary")
         result = testbot.pop_message()
-        assert expected in result
+        expected = plugin._Evil__legendaer
+        assert result in expected

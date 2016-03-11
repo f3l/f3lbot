@@ -37,9 +37,14 @@ word "legendary".""", 1),
     def klug(self, msg, args):
         """Tell someone how smart he is"""
         if args:
-            name = args[0]
-            return "Kluges {0}! Hier hast du {1}!".format(
-                name, choice(self.__klug_items))
+            if len(args) != 1:
+                return "Meine kleinen Schaltkreise können so viel Intelligenz \
+nicht verkraften!"
+            else:
+                name = args[0]
+                return "Kluges {0}! Hier hast du {1}!".format(
+                    name, choice(self.__klug_items)
+                )
         else:
             return "Du bist so Kluk! K – L – U – K!"
 
@@ -51,8 +56,10 @@ word "legendary".""", 1),
     @botcmd(split_args_with=None)
     def armer(self, msg, args):
         """Poor person"""
-        if args:
+        if len(args) == 1:
             return "Armes {0}. Brauchst du ein Taschentuch?".format(args[0])
+        elif len(args) > 1:
+            return "Braucht ihr Mitleid? Ich könnte welches vortäuschen…"
         else:
             return "Oooh. Hast du dir weh getan?"
 
