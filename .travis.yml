@@ -10,7 +10,8 @@ cache:
       - /home/travis/virtualenv/python3.4.2
       - /home/travis/virtualenv/python3.5.0
 install:
-  - pip install -q err pytest pytest-pep8 requests --use-wheel
+  - pip install -q errbot pytest pytest-pep8 requests --use-wheel
+  - pip install -q redis --use-wheel
   - pip install -q coverage coveralls --use-wheel
 script:
   - coverage run --source plugins -m py.test --pep8
