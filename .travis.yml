@@ -5,10 +5,6 @@ python:
   - 3.5
 cache:
   - pip: true
-  - directories:
-      - /home/travis/virtualenv/python3.3.5
-      - /home/travis/virtualenv/python3.4.2
-      - /home/travis/virtualenv/python3.5.0
 install:
   - pip install -q errbot pytest pytest-pep8 requests --use-wheel
   - pip install -q redis --use-wheel

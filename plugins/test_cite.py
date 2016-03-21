@@ -26,10 +26,12 @@ class TestCite(object):
     dbKey = "CitesTest"
 
     def __init__(self):
-        self.db.zrem(self.dbKey)
+        if (self.db.zcard(self.dbKey) != 0):
+            self.db.zremrangebyrank(self.dbKey, 0, 1)
 
+    # First: Remove the key! (Can't be in init, because then things aren't run)
     def test_dblen(self, testbot):
-        plugin = testbot.bot.get_plugin_obj_by_name('Cite')
+        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Cite')
         assert(plugin.dblen == 0)
         self.db.zadd(self.dbKey,
                      1,
@@ -37,7 +39,7 @@ class TestCite(object):
         assert(plugin.dblen == 1)
 
     def test_get_element(self, testbot):
-        plugin = testbot.bot.get_plugin_obj_by_name('Cite')
+        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Cite')
         # 1st: index out of bounds
         assert(plugin.__cite_get_element(-1) == "Invalid index")
         assert(plugin.__cite_get_element(1) == "Invalid index")
@@ -45,7 +47,7 @@ class TestCite(object):
         assert(plugin.__cite_get_element(1) == "Foo")
 
     def test_get_random_cite(self, testbot):
-        plugin = testbot.bot.get_plugin_obj_by_name('Cite')
+        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Cite')
         # 1st: get random (here: only) quote
         assert(plugin.__cite_random_cite() == "Foo")
         # 2nd: Empty DB

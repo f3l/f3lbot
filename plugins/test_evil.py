@@ -86,7 +86,7 @@ nicht verkraften!"
 
     def test_legendary(self, testbot):
         # Has random, thus manually
-        plugin = testbot.bot.get_plugin_obj_by_name('Evil')
+        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Evil')
         testbot.push_message("!legendary")
         result = testbot.pop_message()
         expected = plugin._Evil__legendaer

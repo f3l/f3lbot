@@ -23,7 +23,7 @@ class TestGive(object):
     extra_plugin_dir = "."
 
     def test_evalto(self, testbot):
-        plugin = testbot.bot.get_plugin_obj_by_name('Give')
+        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Give')
         expected = [1, 3]
         result = [
             plugin._Give__evalto(['asdil1991']),
@@ -33,14 +33,14 @@ class TestGive(object):
         assert result == expected
 
     def test_printargs(self, testbot):
-        plugin = testbot.bot.get_plugin_obj_by_name('Give')
+        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Give')
         expected = [" ", " 1 2 3 "]
         result = [plugin._Give__printargs([]),
                   plugin._Give__printargs(["1", "2", "3"])]
         assert result == expected
 
     def test_printto(self, testbot):
-        plugin = testbot.bot.get_plugin_obj_by_name('Give')
+        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Give')
         expected = ['asdil1991', 'asdil1991 and pheerai and asdil12']
         result = [plugin._Give__printto(["asdil1991"], 1),
                   plugin._Give__printto(["asdil1991", "and", "pheerai",
