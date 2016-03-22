@@ -6,13 +6,13 @@ python:
 cache:
   - pip: true
 install:
-  - pip install -q errbot pytest pytest-pep8 requests --use-wheel
+  - pip install -q errbot pytest requests --use-wheel
   - pip install -q redis --use-wheel
   - pip install -q coverage coveralls --use-wheel
 services:
   - redis-server
 script:
-  - coverage run --source plugins -m py.test --pep8
+  - coverage run --source plugins -m py.test
 notifications:
   email: false
 after_success:
