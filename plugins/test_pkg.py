@@ -16,14 +16,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from errbot.backends.test import testbot
-from f3lhelpers import dialogtest
+from f3lhelpers import dialogtest, get_plugin
 
 
 class TestPkg(object):
     extra_plugin_dir = "."
 
     def test_print_packages(self, testbot):
-        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Pkg')
+        plugin = get_plugin(testbot, 'Pkg')
         # Single package
         expected = 'test1:\tJust testing'
         result = plugin._Pkg__print_packages(
@@ -58,20 +58,20 @@ Also just testing'
         assert expected == result
 
     def test_query_aur(self, testbot):
-        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Pkg')
+        plugin = get_plugin(testbot, 'Pkg')
         result = plugin._Pkg__query_aur('x32edit', 'info')
         assert type(result) is dict and type(result['results']) is dict
 
     def test_parse_aur_multi(self, testbot):
         # Multiple returns
-        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Pkg')
+        plugin = get_plugin(testbot, 'Pkg')
         input = plugin._Pkg__query_aur('pheerai', 'msearch')
         result = plugin._Pkg__parse_aur_multi(input)
         assert type(result) is list \
             and type(result[1]) is dict \
             and type(result[1]["name"]) is str
         # Single return
-        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Pkg')
+        plugin = get_plugin(testbot, 'Pkg')
         input = plugin._Pkg__query_aur('x32edit', 'info')
         result = plugin._Pkg__parse_aur_single(input["results"])
         assert type(result) is dict \
@@ -156,7 +156,7 @@ mergerfs:   Another FUSE union filesystem'
         )
 
     def test_query_arch(self, testbot):
-        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Pkg')
+        plugin = get_plugin(testbot, 'Pkg')
         result = plugin._Pkg__query_arch('name', '0ad')
         assert type(result) is dict \
             and result["valid"] is True \
@@ -164,7 +164,7 @@ mergerfs:   Another FUSE union filesystem'
             and type(result["results"][0]) is dict
 
     def test_parse_arch_multi(self, testbot):
-        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Pkg')
+        plugin = get_plugin(testbot, 'Pkg')
         result = plugin._Pkg__query_arch('name', '0ad')
         result2 = plugin._Pkg__parse_arch_multi(result["results"])
         assert type(result2) is list \

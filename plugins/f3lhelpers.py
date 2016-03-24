@@ -36,3 +36,11 @@ def dialogtest(bot, msg, exp):
     bot.push_message(msg)
     result = bot.pop_message()
     assert result == exp
+
+def get_plugin(bot, plugin_name):
+    plugin = bot.bot.plugin_manager.get_plugin_obj_by_name(plugin_name)
+    if (plugin is None): # pragma: no cover
+        raise ValueError("""Type of Plugin {} is None! \
+Have you forgotten 'extra_plugin_dir="."'?""".format(plugin_name))
+    else:
+        return plugin

@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from errbot.backends.test import testbot
-from f3lhelpers import dialogtest
+from f3lhelpers import dialogtest, get_plugin
 
 
 class TestEvil(object):
@@ -86,7 +86,7 @@ nicht verkraften!"
 
     def test_legendary(self, testbot):
         # Has random, thus manually
-        plugin = testbot.bot.plugin_manager.get_plugin_obj_by_name('Evil')
+        plugin = get_plugin(testbot, 'Evil')
         testbot.push_message("!legendary")
         result = testbot.pop_message()
         expected = plugin._Evil__legendaer

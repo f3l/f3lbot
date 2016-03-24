@@ -22,7 +22,6 @@ import redis
 
 class Cite(BotPlugin):
     """API to the F3LCite system"""
-
     db = redis.StrictRedis(host='localhost', port=6379, db=0)
     dbKey = "Cites"
 
@@ -40,9 +39,11 @@ Checks, if index lies within range, and whether the key is valid
             reply = self.db.zrange(self.dbKey, index, index)
             if (len(reply) == 1):
                 return reply[0].decode("utf-8")
-            elif (len(reply) == 0):
+            # The following is justfor the case that the DB gets changed
+            # before reading
+            elif (len(reply) == 0):  # pragma: no cover
                 return "No quote with this key found"
-            else:
+            else:  # pragma: no cover
                 self.log.error("DB corrupted, key used multiple times!")
                 return "Something went horribly wrong!"
         else:
@@ -68,11 +69,12 @@ Checks, if index lies within range, and whether the key is valid
         """Get msg with given index from DB"""
         if (len(args) != 1):
             return "Invalid usage. This command takes exactly one parameter"
-        index = int(args[0])
-        if not type(index) is int:
-            return "This command takes one integer only"
-        else:
+        # If the argument is no int, the following fails
+        try:
+            index = int(args[0])
             return self.__get_element(index - 1)
+        except ValueError:  # pragma: no cover
+            return "This command takes one integer only"
 
     @botcmd()
     def cite_add(self, msg, args):
@@ -89,5 +91,5 @@ Checks, if index lies within range, and whether the key is valid
                                  quote)
             if added == 1:
                 return "Sucessfully added the quote"
-            else:
+            else: # pragma: no cover
                 return "Seems like something went wrong"
