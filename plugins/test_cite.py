@@ -23,7 +23,8 @@ import redis
 class TestCite(object):
     """Test the Cite-plugin"""
     extra_plugin_dir = "."
-    # This must match the dbKey from cites.py. Don't test on system that are in production!
+    # This must match the dbKey from cites.py.
+    # Don't test on system that are in production!
     dbKey = "Cites"
     db = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -70,4 +71,5 @@ class TestCite(object):
                    "!cite get",
                    "Invalid usage. This command takes exactly one parameter")
         dialogtest(testbot, "!cite get 1", "Foo – Bar")
+        dialogtest(testbot, "!cite get a", "This command takes one integer only")
         dialogtest(testbot, "!cite random", "Foo – Bar")
