@@ -22,7 +22,6 @@ import redis
 
 class Cite(BotPlugin):
     """API to the F3LCite system"""
-
     db = redis.StrictRedis(host='localhost', port=6379, db=0)
     dbKey = "Cites"
 
