@@ -15,9 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from errbot import BotPlugin, botcmd, utils, re_botcmd
+from errbot import BotPlugin, botcmd
 from f3lhelpers import chattername
-import re
 
 
 class Give(BotPlugin):
@@ -98,10 +97,3 @@ carrying a{}beer for {}.".format(
                         self.__printargs(args[2*num-1:]),
                         self.__printto(args, num)
                 )
-
-    @re_botcmd(pattern=r"(^| )b(i|e)er?( |$)",
-               prefixed=False,
-               flags=re.IGNORECASE)
-    def listen_beer(self, msg, match):
-        """Did Someone mention Beer?"""
-        return "We DO have beer, just tell me with !beer"
