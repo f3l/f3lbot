@@ -105,9 +105,3 @@ salty gulasch',
             '/me gives salty gulasch to asdil1991 and pheerai \
 and asdil12.'
             )
-
-    def test_listen_beer(self, testbot):
-        testbot.push_message('Ich trinke ein kühles Bier')
-        expected = 'We DO have beer, just tell me with !beer'
-        result = testbot.pop_message()
-        assert expected == result
