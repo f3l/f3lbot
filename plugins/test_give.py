@@ -1,6 +1,6 @@
-# F3LBot – ErrBot Plugins for use with f3l
+# F3LBot - ErrBot Plugins for use with f3l
 # Copyright (C) 2015  The F3L-Team,
-#                     Oliver Rümpelein <oli_r(at)fg4f.de>
+#                     Oliver Ruempelein <oli_r(at)fg4f.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ class TestGive(object):
         result = [
             plugin._Give__evalto(['asdil1991']),
             plugin._Give__evalto(['asdil1991', 'and', 'pheerai',
-                                  'and', 'asdil12', 'cool', 'büchenbacher'])
+                                  'and', 'asdil12', 'cool', 'buechenbacher'])
         ]
         assert result == expected
 
@@ -56,9 +56,9 @@ for None.'
         )
         dialogtest(
             testbot,
-            '!beer cool büchenbacher',
+            '!beer cool buechenbacher',
             '/me goes to the cellar and returns, carrying a cool \
-büchenbacher beer for None.'
+buechenbacher beer for None.'
         )
 
     def test_beer_for_1(self, testbot):
@@ -73,9 +73,9 @@ for asdil1991.'
         dialogtest(
             testbot,
             '!beer for asdil1991 and pheerai and asdil12 \
-cool Büchenbacher',
+cool Buechenbacher',
             '/me goes to the cellar and returns, carrying a \
-cool Büchenbacher beer for asdil1991 and pheerai and asdil12.'
+cool Buechenbacher beer for asdil1991 and pheerai and asdil12.'
             )
 
     def test_give(self, testbot):

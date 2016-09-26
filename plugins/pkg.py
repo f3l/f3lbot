@@ -1,6 +1,6 @@
-# F3LBot – ErrBot Plugins for use with f3l
+# F3LBot - ErrBot Plugins for use with f3l
 # Copyright (C) 2015  The F3L-Team,
-#                     Oliver Rümpelein <oli_r(at)fg4f.de>
+#                     Oliver Ruempelein <oli_r(at)fg4f.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ class Pkg(BotPlugin):
         query_content = self.__query_aur(args, "info")
 #        return query_content
         if query_content["resultcount"] == 1:
-            # Evil hack: AUR parses this shit different if only one result…
+            # Evil hack: AUR parses this shit different if only one result...
             query_parsed = [self.__parse_aur_single(query_content["results"])]
             return self.__print_packages(query_parsed)
         else:
@@ -251,7 +251,7 @@ went wrong. Sorry."
 
     # Multi Stuff
     #
-    # Fucking ugly…
+    # Fucking ugly...
 
     @botcmd
     def pkg_search(self, msg, args):

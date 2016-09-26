@@ -1,7 +1,5 @@
-before_script:
-  - apt-get install -qq -y python3 python-pip
-  - pip3 install -q err pytest pytest-pep8 requests coverage --use-wheel
+image: pheerai/f3lbot-test
 
 errbot:
   script:
-    - coverage run --source plugins -m py.test --pep8
+    - /err/virtualenv/bin/coverage run --source plugins -m py.test --pep8
