@@ -1,6 +1,6 @@
-# F3LBot - ErrBot Plugins for use with f3l
+# F3LBot – ErrBot Plugins for use with f3l
 # Copyright (C) 2015  The F3L-Team,
-#                     Oliver Ruempelein <oli_r(at)fg4f.de>
+#                     Oliver Rümpelein <oli_r(at)fg4f.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ class TestEvil(object):
         dialogtest(
             testbot,
             '!klug',
-            'Du bist so Kluk! K - L - U - K!'
+            'Du bist so Kluk! K – L – U – K!'
         )
         # 1 arg:
         # Random, thus "in"!
@@ -39,7 +39,7 @@ class TestEvil(object):
         dialogtest(
             testbot,
             '!klug pheerai asdil1991',
-            "Meine kleinen Schaltkreise koennen so viel Intelligenz \
+            "Meine kleinen Schaltkreise können so viel Intelligenz \
 nicht verkraften!"
         )
 
@@ -47,7 +47,7 @@ nicht verkraften!"
         dialogtest(
             testbot,
             '!next',
-            "Ein weiter zufriedener Kunde. NAECHSTER!"
+            "Ein weiter zufriedener Kunde. NÄCHSTER!"
         )
 
     def test_armer(self, testbot):
@@ -67,21 +67,21 @@ nicht verkraften!"
         dialogtest(
             testbot,
             '!armer pheerai asdil1991',
-            'Braucht ihr Mitleid? Ich koennte welches vortaeuschen...'
+            'Braucht ihr Mitleid? Ich könnte welches vortäuschen…'
         )
 
     def test_easy(self, testbot):
         dialogtest(
             testbot,
             '!easy',
-            'Das war ja einfach...'
+            'Das war ja einfach…'
         )
 
     def test_haha(self, testbot):
         dialogtest(
             testbot,
             '!haha',
-            'Ha-ha! (C Nelson Muntz)'
+            'Ha-ha! (© Nelson Muntz)'
         )
 
     def test_legendary(self, testbot):

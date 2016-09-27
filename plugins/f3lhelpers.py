@@ -1,6 +1,6 @@
-# F3LBot - ErrBot Plugins for use with f3l
+# F3LBot – ErrBot Plugins for use with f3l
 # Copyright (C) 2015  The F3L-Team,
-#                     Oliver Ruempelein <oli_r(at)fg4f.de>
+#                     Oliver Rümpelein <oli_r(at)fg4f.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

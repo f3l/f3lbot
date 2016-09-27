@@ -1,6 +1,6 @@
-# F3LBot - ErrBot Plugins for use with f3l
+# F3LBot – ErrBot Plugins for use with f3l
 # Copyright (C) 2015  The F3L-Team,
-#                     Oliver Ruempelein <oli_r(at)fg4f.de>
+#                     Oliver Rümpelein <oli_r(at)fg4f.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,11 +26,11 @@ class Evil(BotPlugin):
                     "eine goldene Waschmaschine"]
 
     # Don't overuse the "cool" stuff!
-    __legendaer_items = [("It's gonna be legend-... wait for it... and I hope you're \
+    __legendaer_items = [("It's gonna be legend-… wait for it… and I hope you're \
 not lactose intolerant because the second half of that word is DAIRY!", 1),
                          ("""Don't say that! You're too liberal with the \
 word "legendary".""", 1),
-                         ("It's gonna be legen... wait for it... dary!", 10)]
+                         ("It's gonna be legen… wait for it… dary!", 10)]
     __legendaer = [val for val, cnt in __legendaer_items for i in range(cnt)]
 
     @botcmd(split_args_with=None)
@@ -38,7 +38,7 @@ word "legendary".""", 1),
         """Tell someone how smart he is"""
         if args:
             if len(args) != 1:
-                return "Meine kleinen Schaltkreise koennen so viel Intelligenz \
+                return "Meine kleinen Schaltkreise können so viel Intelligenz \
 nicht verkraften!"
             else:
                 name = args[0]
@@ -46,12 +46,12 @@ nicht verkraften!"
                     name, choice(self.__klug_items)
                 )
         else:
-            return "Du bist so Kluk! K - L - U - K!"
+            return "Du bist so Kluk! K – L – U – K!"
 
     @botcmd(split_args_with=None)
     def next(self, msg, args):
         """Everything done"""
-        return u"Ein weiter zufriedener Kunde. NAECHSTER!"
+        return "Ein weiter zufriedener Kunde. NÄCHSTER!"
 
     @botcmd(split_args_with=None)
     def armer(self, msg, args):
@@ -59,19 +59,19 @@ nicht verkraften!"
         if len(args) == 1:
             return "Armes {0}. Brauchst du ein Taschentuch?".format(args[0])
         elif len(args) > 1:
-            return "Braucht ihr Mitleid? Ich koennte welches vortaeuschen..."
+            return "Braucht ihr Mitleid? Ich könnte welches vortäuschen…"
         else:
             return "Oooh. Hast du dir weh getan?"
 
     @botcmd(split_args_with=None)
     def easy(self, msg, args):
         """That was easy"""
-        return "Das war ja einfach..."
+        return "Das war ja einfach…"
 
     @botcmd(split_args_with=None)
     def haha(self, msg, args):
         """gleefull laughter"""
-        return "Ha-ha! (C Nelson Muntz)"
+        return "Ha-ha! (© Nelson Muntz)"
 
     @botcmd(split_args_with=None)
     def legendary(self, msg, args):
