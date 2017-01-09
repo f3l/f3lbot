@@ -173,14 +173,14 @@ class JsonCiteAPI(BotPlugin):
         self.addUrl = self.full_base_url + "add"
 
     def get_random_cite(self):
-        reply = requests.get(self.getUrl)
+        reply = self.requests.get(self.getUrl)
         if reply.status_code == 200:
             return Cite.json_to_cite(reply.json())
         else:
             return Cite()
 
     def get(self, index):
-        reply = requests.get(self.getUrl + "/" + str(index))
+        reply = self.requests.get(self.getUrl + "/" + str(index))
         print(reply.status_code)
         if reply.status_code == 200:
             return Cite.json_to_cite(reply.json())
@@ -189,7 +189,7 @@ class JsonCiteAPI(BotPlugin):
 
     def add_cite(self, cite, name):
         payload = {"author": name, "cite": cite}
-        reply = requests.post(self.addUrl, json=payload)
+        reply = self.requests.post(self.addUrl, json=payload)
         if reply.status_code == 200:
             internal_json = reply.json()
             return internal_json["message"]
@@ -200,8 +200,8 @@ class JsonCiteAPI(BotPlugin):
 class CiteAPI(BotPlugin):
     """API to the F3LCite system"""
     # Uncomment this to use sqlite
-    # dbname = "/home/oliver/.f3lcites.db"
-    # db = JsonCiteSqlite(dbname)
+    # dbname = "/home/pheerai/.f3lcites.db"
+    # db = CiteSqlite(dbname)
     db = JsonCiteAPI()
 
     def __get_element(self, index):
