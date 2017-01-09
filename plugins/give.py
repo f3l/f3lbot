@@ -1,3 +1,4 @@
+# coding=utf-8
 # F3LBot – ErrBot Plugins for use with f3l
 # Copyright (C) 2015  The F3L-Team,
 #                     Oliver Rümpelein <oli_r(at)fg4f.de>
@@ -15,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# noinspection PyUnresolvedReferences
 from errbot import BotPlugin, botcmd
 from f3lhelpers import peer_account_name
 
@@ -22,7 +24,8 @@ from f3lhelpers import peer_account_name
 class Give(BotPlugin):
     """Example: Hand out Beer"""
 
-    def __evalto(self, args):
+    @staticmethod
+    def __evalto(args):
         """Count number of given names, seperated by 'and'
 
         Args:
@@ -38,7 +41,8 @@ class Give(BotPlugin):
                 break
         return num
 
-    def __printargs(self, args):
+    @staticmethod
+    def __printargs(args):
         """Print args as string if given
 
         Args:
@@ -51,8 +55,9 @@ class Give(BotPlugin):
         else:
             return " "
 
-    def __printto(self, args, num):
-        """Print user string, with users seperated by 'and'.
+    @staticmethod
+    def __printto(args, num):
+        """Print user string, with users separated by 'and'.
 
         Args:
           args: List of strings
@@ -72,6 +77,7 @@ class Give(BotPlugin):
 for {}.".format(self.__printargs(args),
                 peer_account_name(msg))
 
+    # noinspection PyUnusedLocal
     @botcmd(split_args_with=None)
     def beer_for(self, msg, args):
         """Get beer from the cellar, hand to someone else"""
@@ -89,6 +95,7 @@ carrying a{}beer for {}.".format(
             self.__printargs(args),
             peer_account_name(msg))
 
+    # noinspection PyUnusedLocal
     @botcmd(split_args_with=None)
     def give_to(self, msg, args):
         """Give 'something' to 'someone'"""

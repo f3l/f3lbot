@@ -16,12 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# noinspection PyUnresolvedReferences
 from errbot import BotPlugin, botcmd
 from f3lhelpers import peer_account_name
+# noinspection PyUnresolvedReferences
 import json
 
 
-class Cite():
+class Cite:
     def __init__(self, id=0, cite="",
                  added="", addedby="",
                  changed="", changedby=""):
@@ -81,13 +83,15 @@ changedby: {changedby})""".format(id=self.id,
             raise KeyError
 
 
-class CiteSqlite():
+class CiteSqlite:
     """SQLite3-Wrapper for F3LBot and F3LCites-System
     Usually returns (arrays of) dicts of the form
       {"id": 1, "cite": "Foo", "addedby": "Guy",
        "added": "1970-01-01", "changedby": "Guy2",
        "changed": "1970-01-02"}"""
+    # noinspection PyUnresolvedReferences
     import sqlite3
+    # noinspection PyUnresolvedReferences
     from random import randint
     __q_prepareDB = """CREATE TABLE IF NOT EXISTS cites(
     id INTEGER PRIMARY KEY ASC AUTOINCREMENT, cite TEXT NOT NULL,
@@ -159,6 +163,7 @@ class CiteSqlite():
 
 class JsonCiteAPI(BotPlugin):
     """Connector to the F3LCites Json API."""
+    # noinspection PyUnresolvedReferences
     import requests
     f3lcites_host = "localhost"
     f3lcites_port = "8888"

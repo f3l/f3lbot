@@ -1,3 +1,4 @@
+# coding=utf-8
 # F3LBot – ErrBot Plugins for use with f3l
 # Copyright (C) 2015  The F3L-Team,
 #                     Oliver Rümpelein <oli_r(at)fg4f.de>
@@ -15,11 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# noinspection PyUnresolvedReferences
 from errbot.backends.test import testbot
 from f3lhelpers import dialog_test, get_plugin
 
 
-class TestGive(object):
+# noinspection PyClassHasNoInit
+class TestGive:
     extra_plugin_dir = "."
 
     def test_evalto(self, testbot):

@@ -1,3 +1,4 @@
+# coding=utf-8
 # F3LBot – ErrBot Plugins for use with f3l
 # Copyright (C) 2015  The F3L-Team,
 #                     Oliver Rümpelein <oli_r(at)fg4f.de>
@@ -15,7 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# noinspection PyUnresolvedReferences
 from errbot import BotPlugin, botcmd
+# noinspection PyUnresolvedReferences
 from random import choice
 
 
@@ -33,6 +36,7 @@ word "legendary".""", 1),
                          ("It's gonna be legen… wait for it… dary!", 10)]
     __legendaer = [val for val, cnt in __legendaer_items for i in range(cnt)]
 
+    # noinspection PyUnusedLocal
     @botcmd(split_args_with=None)
     def klug(self, msg, args):
         """Tell someone how smart he is"""
@@ -53,6 +57,7 @@ nicht verkraften!"
         """Everything done"""
         return "Ein weiter zufriedener Kunde. NÄCHSTER!"
 
+    # noinspection PyUnusedLocal
     @botcmd(split_args_with=None)
     def armer(self, msg, args):
         """Poor person"""
@@ -63,16 +68,19 @@ nicht verkraften!"
         else:
             return "Oooh. Hast du dir weh getan?"
 
+    # noinspection PyUnusedLocal
     @botcmd(split_args_with=None)
     def easy(self, msg, args):
         """That was easy"""
         return "Das war ja einfach…"
 
+    # noinspection PyUnusedLocal
     @botcmd(split_args_with=None)
     def haha(self, msg, args):
         """gleefull laughter"""
         return "Ha-ha! (© Nelson Muntz)"
 
+    # noinspection PyUnusedLocal
     @botcmd(split_args_with=None)
     def legendary(self, msg, args):
         """Do the Barney S."""
