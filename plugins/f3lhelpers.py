@@ -15,10 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from errbot import BotPlugin, botcmd, utils
 
-
-def chattername(msg):
+def peer_account_name(msg):
     """Returns the Nick of the sender of a message"""
     if msg.type == 'groupchat':
         return msg.frm.resource  # pragma: no cover
@@ -26,8 +24,8 @@ def chattername(msg):
         return msg.frm.nick
 
 
-def dialogtest(bot, msg, exp):
-    """Easy interface for tests if the form msg => reply
+def dialog_test(bot, msg, exp):
+    """Easy interface for tests of the form msg => reply
     Arguments:
         bot: A testbot instance
         msg: The message to pass to bot
@@ -37,9 +35,22 @@ def dialogtest(bot, msg, exp):
     result = bot.pop_message()
     assert result == exp
 
+
+def dialog_contains_test(bot, msg, exp):
+    """Easy interface for tests where containing is needed
+    Arguments:
+        bot: A testbot instance
+        msg: The message to pass to the bot
+        exp: String expected to be contained within the reply
+    """
+    bot.push_message(msg)
+    result = bot.pop_message()
+    assert exp in result
+
+
 def get_plugin(bot, plugin_name):
     plugin = bot.bot.plugin_manager.get_plugin_obj_by_name(plugin_name)
-    if (plugin is None): # pragma: no cover
+    if plugin is None:  # pragma: no cover
         raise ValueError("""Type of Plugin {} is None! \
 Have you forgotten 'extra_plugin_dir="."'?""".format(plugin_name))
     else:

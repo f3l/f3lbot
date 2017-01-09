@@ -16,14 +16,144 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from errbot import BotPlugin, botcmd
-from random import randint
-import redis
+from f3lhelpers import peer_account_name
 
 
-class Cite(BotPlugin):
+class Cite():
+    def __init__(self, id=0, cite="",
+                 added="", addedby="",
+                 changed="", changedby=""):
+        self.id = id
+        self.cite = self.__needsdecode(cite)
+        self.added = self.__needsdecode(added)
+        self.addedby = self.__needsdecode(addedby)
+        self.changed = self.__needsdecode(changed)
+        self.changedby = self.__needsdecode(changedby)
+
+    def __needsdecode(self, tstr):
+        if type(tstr) is bytes:
+            return tstr.decode("utf-8")
+        else:
+            return tstr
+
+    def __str__(self):
+        if self.id == 0:
+            return "No such cite. Please check your index or report to admin."
+        else:
+            return "\n{cite}\n(added by {addedby})"\
+                .format(cite=self.cite,
+                        addedby=self.addedby)
+
+    def __repr__(self):
+        return """Cite(id: {id},
+cite: {cite},
+added: {added},
+addedby: {addedby},
+changed: {changed},
+changedby: {changedby})""".format(id=self.id,
+                                  cite=self.cite,
+                                  added=self.added,
+                                  addedby=self.addedby,
+                                  changed=self.changed,
+                                  changedby=self.changedby)
+
+    def __getitem__(self, key):
+        if key == "id":
+            return self.id
+        elif key == "cite":
+            return self.cite
+        elif key == "added":
+            return self.added
+        elif key == "addedby":
+            return self.addedby
+        elif key == "changed":
+            return self.changed
+        elif key == "changedby":
+            return self.changedby
+        else:
+            raise KeyError
+
+
+class CiteSqlite():
+    """SQLite3-Wrapper for F3LBot and F3LCites-System
+    Usually returns (arrays of) dicts of the form
+      {"id": 1, "cite": "Foo", "addedby": "Guy",
+       "added": "1970-01-01", "changedby": "Guy2",
+       "changed": "1970-01-02"}"""
+    import sqlite3
+    from random import randint
+    __q_prepareDB = """CREATE TABLE IF NOT EXISTS cites(
+    id INTEGER PRIMARY KEY ASC AUTOINCREMENT, cite TEXT NOT NULL,
+    added TEXT DEFAULT (date('now')), addedby TEXT);
+    CREATE TABLE IF NOT EXISTS changes(
+    id INTEGER PRIMARY KEY ASC AUTOINCREMENT, citeid INTEGER UNSIGNED,
+    changed TEXT DEFAULT (date('now')), changedby TEXT);
+    CREATE VIEW IF NOT EXISTS mergecites AS SELECT
+    cites.id, cites.cite, cites.added, cites.addedby,
+    changes.changed, changes.changedby FROM cites
+    LEFT JOIN changes ON cites.id = changes.citeid;
+    CREATE VIEW IF NOT EXISTS showcites AS SELECT
+    id, cite, added, addedby, MAX(changed), changedby FROM mergecites
+    GROUP BY id;"""
+    __q_randomCite = "SELECT * FROM showcites ORDER BY added DESC LIMIT ?, 1"
+    __q_getCite = "SELECT * FROM showcites WHERE id==?"
+    __q_addCite = "INSERT INTO cites (cite, addedby) VALUES (?,?)"
+    __q_countRecords = "SELECT COUNT(*) FROM cites"
+
+    def __init__(self, dbname=":memory:"):
+        self.conn = self.sqlite3.connect(dbname, check_same_thread=False)
+        self.conn.text_factory = str
+        self.db = self.conn.cursor()
+        self.db.executescript(self.__q_prepareDB)
+        self.conn.commit()
+
+    def getRandomCite(self):
+        self.db.execute(self.__q_countRecords)
+        records = self.db.fetchone()
+        if records and len(records) == 1:
+            randrecord = self.randint(0, records[0] - 1)
+            self.db.execute(self.__q_randomCite, str(randrecord))
+            answer = self.db.fetchone()
+            if answer:
+                # Extract Infos from reply
+                return Cite(
+                    id=answer[0],
+                    cite=answer[1],
+                    added=answer[2],
+                    addedby=answer[3],
+                    changed=answer[4],
+                    changedby=answer[5]
+                )
+        else:
+            return Cite()
+
+    def get(self, index):
+        self.db.execute(self.__q_getCite, str(index))
+        answer = self.db.fetchone()
+        print(answer)
+        if answer and len(answer) == 6:
+            # Extract Infos from reply
+            return Cite(
+                id=answer[0],
+                cite=answer[1],
+                added=answer[2],
+                addedby=answer[3],
+                changed=answer[4],
+                changedby=answer[5]
+            )
+        else:
+            return Cite
+
+    def addCite(self, cite, name):
+        self.db.execute(self.__q_addCite, (cite, name))
+        self.conn.commit()
+        return "Added Cite"
+
+
+class CiteAPI(BotPlugin):
     """API to the F3LCite system"""
-    db = redis.StrictRedis(host='localhost', port=6379, db=0)
-    dbKey = "Cites"
+    dbname = "/home/oliver/.f3lcites.db"
+    db = CiteSqlite(dbname)
 
     @property
     def dblen(self):
@@ -31,33 +161,20 @@ class Cite(BotPlugin):
         return self.db.zcard(self.dbKey)
 
     def __get_element(self, index):
-        """Get a single element.
-
-Checks, if index lies within range, and whether the key is valid
-"""
-        if (0 <= index) and (index < self.dblen):
-            reply = self.db.zrange(self.dbKey, index, index)
-            if (len(reply) == 1):
-                return reply[0].decode("utf-8")
-            # The following is justfor the case that the DB gets changed
-            # before reading
-            elif (len(reply) == 0):  # pragma: no cover
-                return "No quote with this key found"
-            else:  # pragma: no cover
-                self.log.error("DB corrupted, key used multiple times!")
-                return "Something went horribly wrong!"
+        """Get a single element."""
+        cite = self.db.get(index)
+        if cite and cite["id"] != 0:
+            return str(cite)
         else:
-            return "Invalid index"
+            return "Invalid index: {}".format(cite["id"] if cite else None)
 
     def __random_cite(self):
         """Return a random quote"""
-        zlen = self.db.zcard(self.dbKey)
-        if (zlen == 0):
-            return "No cites in DB"
+        cite = self.db.getRandomCite()
+        if cite and cite["id"] != 0:
+            return cite
         else:
-            # randint has inclusive end!
-            ranIndex = randint(0, zlen-1)
-            return self.__get_element(ranIndex)
+            return "Invalid index"
 
     @botcmd(split_args_with=None)
     def cite_random(self, msg, args):
@@ -72,9 +189,10 @@ Checks, if index lies within range, and whether the key is valid
         # If the argument is no int, the following fails
         try:
             index = int(args[0])
-            return self.__get_element(index - 1)
+            return self.__get_element(index)
         except ValueError:  # pragma: no cover
-            return "This command takes one integer only"
+            return "This command takes one integer only. Have you specified \
+an existing index?"
 
     @botcmd()
     def cite_add(self, msg, args):
@@ -86,10 +204,9 @@ Checks, if index lies within range, and whether the key is valid
                         .replace("\r", " – ")\
                         .replace("\n", " – ")\
                         .encode("utf-8")
-            added = self.db.zadd(self.dbKey,
-                                 self.dblen,
-                                 quote)
-            if added == 1:
-                return "Sucessfully added the quote"
-            else: # pragma: no cover
-                return "Seems like something went wrong"
+            added = self.db.addCite(quote, peer_account_name(msg))
+            return added
+            # if added == 1:
+            #     return "Sucessfully added the quote"
+            # else: # pragma: no cover
+            #     return "Seems like something went wrong"

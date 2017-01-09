@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from errbot.backends.test import testbot
-from f3lhelpers import dialogtest, get_plugin
+from f3lhelpers import dialog_test, dialog_contains_test, get_plugin
 
 
 class TestPkg(object):
@@ -77,20 +77,20 @@ Also just testing'
         assert type(result) is dict \
             and type(result["name"]) is str
 
-    # Here, the "ugly unit tests" start: They are
+    # Here, the integration tests start: They are
     # __DEPENDENT ON OTHER SERVICES__
     # (Don't like it, but hey…)
 
     def test_aur_info(self, testbot):
         # Missing argument
-        dialogtest(
+        dialog_test(
             testbot,
             '!aur info',
             'Please specify a keyword.'
         )
 
         # With valid argument
-        dialogtest(
+        dialog_contains_test(
             testbot,
             '!aur info x32edit',
             'x32edit:    Remote control and programm \
@@ -98,7 +98,7 @@ Behringer X32 consoles'
         )
 
         # Valid argument, no result:
-        dialogtest(
+        dialog_test(
             testbot,
             '!aur info foobar_baz',
             'foobar_baz was not found, \
@@ -107,23 +107,21 @@ or something else went wrong. Sorry.'
 
     def test_aur_search(self, testbot):
         # Missing argument
-        dialogtest(
+        dialog_test(
             testbot,
             '!aur search',
             'Please specify a keyword.'
         )
 
         # Valid argument + result:
-        dialogtest(
+        dialog_contains_test(
             testbot,
             '!aur search x32edit',
-            '1 matching packages found.\n\
-x32edit:    Remote control and programm \
-Behringer X32 consoles'
+            ' matching packages found.\n'
         )
 
         # No search result:
-        dialogtest(
+        dialog_test(
             testbot,
             '!aur search foobarbaz',
             'No package matching your query found.'
@@ -131,25 +129,21 @@ Behringer X32 consoles'
 
     def test_aur_maint(self, testbot):
         # Missing argument
-        dialogtest(
+        dialog_test(
             testbot,
             '!aur maint',
             'Please specify a keyword.'
         )
 
         # Valid argument + result
-        dialogtest(
+        dialog_contains_test(
             testbot,
             '!aur maint pheerai',
-            '4 packages maintained by pheerai found.\n\
-x32edit:    Remote control and programm Behringer X32 consoles\n\
-python-pytest-pep8: pytest plugin to check PEP8 requirements.\n\
-xprofile:   A tool to manage and automatically apply xrandr configurations.\n\
-mergerfs:   Another FUSE union filesystem'
+            ' packages maintained by pheerai found.\n'
         )
 
         # Valid argument, no result
-        dialogtest(
+        dialog_test(
             testbot,
             '!aur maint foobarbaz',
             'No packages maintained by foobarbaz found.'
@@ -173,22 +167,21 @@ mergerfs:   Another FUSE union filesystem'
 
     def test_arch_info(self, testbot):
         # No argument
-        dialogtest(
+        dialog_test(
             testbot,
             '!arch info',
             'Please specify a keyword.'
         )
 
         # Valid Argument, hit
-        dialogtest(
+        dialog_contains_test(
             testbot,
             '!arch info 0ad',
-            'community/0ad:  Cross-platform, 3D and \
-historically-based real-time strategy game'
+            'community/0ad: '
         )
 
         # Valid Argument, no hit
-        dialogtest(
+        dialog_test(
             testbot,
             '!arch info foobarbaz',
             'foobarbaz was not found, or something \
@@ -197,24 +190,22 @@ else went wrong. Sorry.'
 
     def test_arch_search(self, testbot):
         # No Argument
-        dialogtest(
+        dialog_test(
             testbot,
             '!arch search',
             'Please specify a keyword.'
         )
 
         # Valid Argument, no hit
-        dialogtest(
+        dialog_contains_test(
             testbot,
             '!arch search 0ad',
             # Using the Messages, \t gets replaced.
-            "1 matching packages found.\n\
-community/0ad:  Cross-platform, 3D and historically-based \
-real-time strategy game"
+            " matching packages found.\n"
         )
 
         # Valid arg, no result
-        dialogtest(
+        dialog_test(
             testbot,
             '!arch search foobarbaz',
             'No package matching your query found.'
@@ -222,38 +213,36 @@ real-time strategy game"
 
     def test_arch_maint(self, testbot):
         # No argument
-        dialogtest(
+        dialog_test(
             testbot,
             '!arch maint',
             'Please specify a keyword.'
         )
         # No Dialogtest, we want to map using in!
-        testbot.push_message('!arch maint faidoc')
-        expected = ' packages maintained by faidoc found.\n\
-cinnamon'
-        result = testbot.pop_message()
-        assert expected in result
+        dialog_contains_test(
+            testbot,
+            '!arch maint faidoc',
+            ' packages maintained by faidoc found.\n'
+        )
         # Single arg without match
-        dialogtest(
+        dialog_test(
             testbot,
             '!arch maint foobarbaz',
             'No packages maintained by foobarbaz found.'
         )
 
     def test_pkg_search(self, testbot):
-        dialogtest(
+        dialog_test(
             testbot,
             '!pkg search',
             'Please specify a keyword.'
         )
-        dialogtest(
+        dialog_contains_test(
             testbot,
             '!pkg search python-systemd',
-            '2 matching packages found.\n\
-extra/python-systemd:   Python bindings for systemd\n\
-aur/python-systemd-git: Systemd python bindings'
+            ' matching packages found.\n'
         )
-        dialogtest(
+        dialog_test(
             testbot,
             '!pkg search foobarbaz',
             'Sorry, no matching packages found.'
