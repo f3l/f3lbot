@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from errbot.backends.test import testbot
-from f3lhelpers import dialogtest, get_plugin
+from f3lhelpers import dialog_test, get_plugin
 
 
 class TestGive(object):
@@ -48,13 +48,13 @@ class TestGive(object):
         assert expected == result
 
     def test_beer_1(self, testbot):
-        dialogtest(
+        dialog_test(
             testbot,
             '!beer',
             '/me goes to the cellar and returns, carrying a beer \
 for None.'
         )
-        dialogtest(
+        dialog_test(
             testbot,
             '!beer cool büchenbacher',
             '/me goes to the cellar and returns, carrying a cool \
@@ -62,7 +62,7 @@ büchenbacher beer for None.'
         )
 
     def test_beer_for_1(self, testbot):
-        dialogtest(
+        dialog_test(
             testbot,
             '!beer for asdil1991',
             '/me goes to the cellar and returns, carrying a beer \
@@ -70,7 +70,7 @@ for asdil1991.'
         )
 
     def test_beer_for_2(self, testbot):
-        dialogtest(
+        dialog_test(
             testbot,
             '!beer for asdil1991 and pheerai and asdil12 \
 cool Büchenbacher',
@@ -79,12 +79,12 @@ cool Büchenbacher beer for asdil1991 and pheerai and asdil12.'
             )
 
     def test_give(self, testbot):
-        dialogtest(
+        dialog_test(
             testbot,
             '!give',
             '/me gives a to None.'
         )
-        dialogtest(
+        dialog_test(
             testbot,
             '!give sweet chocolate',
             '/me gives a sweet chocolate to None.'
@@ -92,13 +92,13 @@ cool Büchenbacher beer for asdil1991 and pheerai and asdil12.'
 
     def test_give_to(self, testbot):
         # give to 1 person
-        dialogtest(
+        dialog_test(
             testbot,
             '!give to asdil1991',
             '/me gives to asdil1991.'
         )
         # Give to multiple persons
-        dialogtest(
+        dialog_test(
             testbot,
             '!give to asdil1991 and pheerai and asdil12 \
 salty gulasch',

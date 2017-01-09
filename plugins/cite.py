@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from errbot import BotPlugin, botcmd
-from f3lhelpers import chattername
+from f3lhelpers import peer_account_name
 
 
 class Cite():
@@ -204,7 +204,7 @@ an existing index?"
                         .replace("\r", " – ")\
                         .replace("\n", " – ")\
                         .encode("utf-8")
-            added = self.db.addCite(quote, chattername(msg))
+            added = self.db.addCite(quote, peer_account_name(msg))
             return added
             # if added == 1:
             #     return "Sucessfully added the quote"

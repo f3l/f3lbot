@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from errbot.backends.test import testbot
-from f3lhelpers import dialogtest, get_plugin
+from f3lhelpers import dialog_test, get_plugin
 
 
 class TestEvil(object):
@@ -24,7 +24,7 @@ class TestEvil(object):
 
     def test_klug(self, testbot):
         # empty
-        dialogtest(
+        dialog_test(
             testbot,
             '!klug',
             'Du bist so Kluk! K – L – U – K!'
@@ -36,7 +36,7 @@ class TestEvil(object):
         result = testbot.pop_message()
         assert expected in result
         # 2 args:
-        dialogtest(
+        dialog_test(
             testbot,
             '!klug pheerai asdil1991',
             "Meine kleinen Schaltkreise können so viel Intelligenz \
@@ -44,7 +44,7 @@ nicht verkraften!"
         )
 
     def test_next(self, testbot):
-        dialogtest(
+        dialog_test(
             testbot,
             '!next',
             "Ein weiter zufriedener Kunde. NÄCHSTER!"
@@ -52,33 +52,33 @@ nicht verkraften!"
 
     def test_armer(self, testbot):
         # empty
-        dialogtest(
+        dialog_test(
             testbot,
             '!armer',
             'Oooh. Hast du dir weh getan?'
         )
         # Nick specified
-        dialogtest(
+        dialog_test(
             testbot,
             '!armer pheerai',
             'Armes pheerai. Brauchst du ein Taschentuch?'
         )
         # Several nicks:
-        dialogtest(
+        dialog_test(
             testbot,
             '!armer pheerai asdil1991',
             'Braucht ihr Mitleid? Ich könnte welches vortäuschen…'
         )
 
     def test_easy(self, testbot):
-        dialogtest(
+        dialog_test(
             testbot,
             '!easy',
             'Das war ja einfach…'
         )
 
     def test_haha(self, testbot):
-        dialogtest(
+        dialog_test(
             testbot,
             '!haha',
             'Ha-ha! (© Nelson Muntz)'
