@@ -1,3 +1,4 @@
+# coding=utf-8
 # F3LBot – ErrBot Plugins for use with f3l
 # Copyright (C) 2015  The F3L-Team,
 #                     Oliver Rümpelein <oli_r(at)fg4f.de>
@@ -15,11 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# noinspection PyUnresolvedReferences
 from errbot import BotPlugin, botcmd
 from f3lhelpers import peer_account_name
+# noinspection PyUnresolvedReferences
+import json
 
 
-class Cite():
+class Cite:
     def __init__(self, id=0, cite="",
                  added="", addedby="",
                  changed="", changedby=""):
@@ -30,7 +34,12 @@ class Cite():
         self.changed = self.__needsdecode(changed)
         self.changedby = self.__needsdecode(changedby)
 
-    def __needsdecode(self, tstr):
+    @staticmethod
+    def json_to_cite(jsoncite):
+        return Cite(**jsoncite)
+
+    @staticmethod
+    def __needsdecode(tstr):
         if type(tstr) is bytes:
             return tstr.decode("utf-8")
         else:
@@ -74,13 +83,15 @@ changedby: {changedby})""".format(id=self.id,
             raise KeyError
 
 
-class CiteSqlite():
+class CiteSqlite:
     """SQLite3-Wrapper for F3LBot and F3LCites-System
     Usually returns (arrays of) dicts of the form
       {"id": 1, "cite": "Foo", "addedby": "Guy",
        "added": "1970-01-01", "changedby": "Guy2",
        "changed": "1970-01-02"}"""
+    # noinspection PyUnresolvedReferences
     import sqlite3
+    # noinspection PyUnresolvedReferences
     from random import randint
     __q_prepareDB = """CREATE TABLE IF NOT EXISTS cites(
     id INTEGER PRIMARY KEY ASC AUTOINCREMENT, cite TEXT NOT NULL,
@@ -107,7 +118,7 @@ class CiteSqlite():
         self.db.executescript(self.__q_prepareDB)
         self.conn.commit()
 
-    def getRandomCite(self):
+    def get_random_cite(self):
         self.db.execute(self.__q_countRecords)
         records = self.db.fetchone()
         if records and len(records) == 1:
@@ -144,21 +155,59 @@ class CiteSqlite():
         else:
             return Cite
 
-    def addCite(self, cite, name):
+    def add_cite(self, cite, name):
         self.db.execute(self.__q_addCite, (cite, name))
         self.conn.commit()
         return "Added Cite"
 
 
+class JsonCiteAPI(BotPlugin):
+    """Connector to the F3LCites Json API."""
+    # noinspection PyUnresolvedReferences
+    import requests
+    f3lcites_host = "localhost"
+    f3lcites_port = "8888"
+    f3lcites_base_url = "api/"
+
+    def __init__(self):
+        self.full_base_url = \
+            "http://" + self.f3lcites_host \
+            + ":" + self.f3lcites_port \
+            + "/" + self.f3lcites_base_url
+        self.getUrl = self.full_base_url + "get"
+        self.addUrl = self.full_base_url + "add"
+
+    def get_random_cite(self):
+        reply = self.requests.get(self.getUrl)
+        if reply.status_code == 200:
+            return Cite.json_to_cite(reply.json())
+        else:
+            return Cite()
+
+    def get(self, index):
+        reply = self.requests.get(self.getUrl + "/" + str(index))
+        print(reply.status_code)
+        if reply.status_code == 200:
+            return Cite.json_to_cite(reply.json())
+        else:
+            return Cite()
+
+    def add_cite(self, cite, name):
+        payload = {"author": name, "cite": cite}
+        reply = self.requests.post(self.addUrl, json=payload)
+        if reply.status_code == 200:
+            internal_json = reply.json()
+            return internal_json["message"]
+        else:
+            return "Adding failed."
+
+
 class CiteAPI(BotPlugin):
     """API to the F3LCite system"""
-    dbname = "/home/oliver/.f3lcites.db"
-    db = CiteSqlite(dbname)
-
-    @property
-    def dblen(self):
-        """Returns the number of elements in the ordered set"""
-        return self.db.zcard(self.dbKey)
+    # Uncomment this to use sqlite
+    # dbname = "/home/pheerai/.f3lcites.db"
+    # db = CiteSqlite(dbname)
+    db = JsonCiteAPI()
 
     def __get_element(self, index):
         """Get a single element."""
@@ -170,21 +219,23 @@ class CiteAPI(BotPlugin):
 
     def __random_cite(self):
         """Return a random quote"""
-        cite = self.db.getRandomCite()
+        cite = self.db.get_random_cite()
         if cite and cite["id"] != 0:
             return cite
         else:
             return "Invalid index"
 
+    # noinspection PyUnusedLocal
     @botcmd(split_args_with=None)
     def cite_random(self, msg, args):
         """Get random cite from DB"""
         return self.__random_cite()
 
+    # noinspection PyUnusedLocal
     @botcmd(split_args_with=None)
     def cite_get(self, msg, args):
         """Get msg with given index from DB"""
-        if (len(args) != 1):
+        if len(args) != 1:
             return "Invalid usage. This command takes exactly one parameter"
         # If the argument is no int, the following fails
         try:
@@ -204,7 +255,7 @@ an existing index?"
                         .replace("\r", " – ")\
                         .replace("\n", " – ")\
                         .encode("utf-8")
-            added = self.db.addCite(quote, peer_account_name(msg))
+            added = self.db.add_cite(quote, peer_account_name(msg))
             return added
             # if added == 1:
             #     return "Sucessfully added the quote"

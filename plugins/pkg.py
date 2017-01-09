@@ -1,3 +1,4 @@
+# coding=utf-8
 # F3LBot – ErrBot Plugins for use with f3l
 # Copyright (C) 2015  The F3L-Team,
 #                     Oliver Rümpelein <oli_r(at)fg4f.de>
@@ -15,7 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# noinspection PyUnresolvedReferences
 from errbot import BotPlugin, botcmd
+# noinspection PyUnresolvedReferences
 from urllib.parse import urlencode  # For UTF8 support
 import requests
 
@@ -26,13 +29,14 @@ class Pkg(BotPlugin):
     # Global Stuff
     #
 
-    def __print_packages(self, results, repo=False, sep="/", preamb=""):
+    @staticmethod
+    def __print_packages(results, repo=False, sep="/", preamble=""):
         """Convert parsed JSON from below into a printable form.
 
         results: Output of __parse_* from this module
         repo: (Bool) Whether the repo of the packages should be printed
         sep: Separator between repo and package
-        preamb: A preamble string
+        preamble: A preamble string
 
         returns: String
         """
@@ -43,7 +47,7 @@ class Pkg(BotPlugin):
         else:
             for i in results:
                 pkgstrings.append(i["name"]+":\t"+i["desc"])
-        return preamb + "\n".join(pkgstrings)
+        return preamble + "\n".join(pkgstrings)
 
     # Aur-Stuff
     #
@@ -67,7 +71,7 @@ class Pkg(BotPlugin):
         return query_handle.json()
 
     def __parse_aur_multi(self, json):
-        """Parse AUR-Jsonobject and prepare for print
+        """Parse AUR-Json-object and prepare for print
 
         json: interpreted handle from __query_aur
 
@@ -78,11 +82,13 @@ class Pkg(BotPlugin):
             retval.append(self.__parse_aur_single(i))
         return retval
 
-    def __parse_aur_single(self, json):
+    @staticmethod
+    def __parse_aur_single(json):
         return {"name": json["Name"],
                 "desc": json["Description"],
                 "repo": "aur"}
 
+    # noinspection PyUnusedLocal
     @botcmd
     def aur_info(self, msg, args):
         """Print Package description, if it exists
@@ -104,6 +110,7 @@ class Pkg(BotPlugin):
             return args + " was not found, or something else \
 went wrong. Sorry."
 
+    # noinspection PyUnusedLocal
     @botcmd
     def aur_search(self, msg, args):
         """Searches for AUR packages
@@ -122,10 +129,11 @@ went wrong. Sorry."
             query_parsed = self.__parse_aur_multi(query_content)
             return self.__print_packages(
                 query_parsed,
-                preamb=str(query_content["resultcount"]) +
+                preamble=str(query_content["resultcount"]) +
                 " matching packages found.\n"
             )
 
+    # noinspection PyUnusedLocal
     @botcmd
     def aur_maint(self, msg, args):
         """Searches for AUR Maintainers
@@ -144,14 +152,15 @@ went wrong. Sorry."
             query_parsed = self.__parse_aur_multi(query_content)
             return self.__print_packages(
                 query_parsed,
-                preamb=str(query_content["resultcount"]) +
-                " packages maintained by "+args+" found.\n"
+                preamble=str(query_content["resultcount"]) +
+                " packages maintained by " + args + " found.\n"
             )
 
     # Arch-Stuff
     #
 
-    def __query_arch(self, query, query_type):
+    @staticmethod
+    def __query_arch(query, query_type):
         """Perform a single query on the Arch API.
 
         query: parameters
@@ -167,8 +176,9 @@ went wrong. Sorry."
         )
         return query_handle.json()
 
-    def __parse_arch_multi(self, json):
-        """Parse AUR-Jsonobject and prepare for print
+    @staticmethod
+    def __parse_arch_multi(json):
+        """Parse AUR-Json-object and prepare for print
 
         json: interpreted handle from __query_aur
 
@@ -183,6 +193,7 @@ went wrong. Sorry."
             })
         return retval
 
+    # noinspection PyUnusedLocal
     @botcmd
     def arch_info(self, msg, args):
         """Print Package description, if it exists
@@ -203,6 +214,7 @@ went wrong. Sorry."
             query_packages = self.__parse_arch_multi(query_packages)
             return self.__print_packages(query_packages, repo=True)
 
+    # noinspection PyUnusedLocal
     @botcmd
     def arch_search(self, msg, args):
         """Searches for Arch packages
@@ -223,9 +235,11 @@ went wrong. Sorry."
             return self.__print_packages(
                 query_packages,
                 repo=True,
-                preamb=str(len(query_packages)) + " matching packages found.\n"
+                preamble=str(len(query_packages)) +
+                " matching packages found.\n"
             )
 
+    # noinspection PyUnusedLocal
     @botcmd
     def arch_maint(self, msg, args):
         """Searches for ARCH Maintainers
@@ -245,14 +259,15 @@ went wrong. Sorry."
             query_packages = self.__parse_arch_multi(query_packages)
             return self.__print_packages(
                 query_packages,
-                preamb=str(len(query_packages)) +
-                " packages maintained by "+args+" found.\n"
+                preamble=str(len(query_packages)) +
+                " packages maintained by " + args + " found.\n"
             )
 
     # Multi Stuff
     #
     # Fucking ugly…
 
+    # noinspection PyUnusedLocal
     @botcmd
     def pkg_search(self, msg, args):
         """Search Arch-Repos + Aur.
@@ -283,5 +298,5 @@ went wrong. Sorry."
             return self.__print_packages(
                 res_parsed,
                 repo=True,
-                preamb=str(len(res_parsed)) + " matching packages found.\n"
+                preamble=str(len(res_parsed)) + " matching packages found.\n"
             )
