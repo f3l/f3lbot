@@ -15,6 +15,3 @@ A collection of ErrBot-Extensions made for F3L.
 * F3L-Service Overview, status
 * F3L-Gitlab webhook
 * Pkg: rewrite
-
-[![Build Status](https://travis-ci.org/f3l/f3lbot.svg?branch=master)](https://travis-ci.org/f3l/f3lbot)
-[![Coverage Status](https://coveralls.io/repos/github/f3l/f3lbot/badge.svg?branch=master)](https://coveralls.io/github/f3l/f3lbot?branch=master)
