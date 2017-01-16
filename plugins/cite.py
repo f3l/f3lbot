@@ -251,10 +251,7 @@ an existing index?"
         if not args:
             return "Invalid usage. You must add a quote"
         else:
-            quote = args.replace("\r\n", " – ")\
-                        .replace("\r", " – ")\
-                        .replace("\n", " – ")\
-                        .encode("utf-8")
+            quote = args
             added = self.db.add_cite(quote, peer_account_name(msg))
             return added
             # if added == 1:
