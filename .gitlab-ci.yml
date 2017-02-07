@@ -1,5 +1,0 @@
-image: pheerai/f3lbot-test
-
-errbot:
-  script:
-    - /err/virtualenv/bin/coverage run --source plugins -m py.test --pep8

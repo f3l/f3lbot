@@ -55,6 +55,7 @@ nicht verkraften!"
     @botcmd(split_args_with=None)
     def next(self, msg, args):
         """Everything done"""
+        del msg, args
         return "Ein weiter zufriedener Kunde. NÄCHSTER!"
 
     # noinspection PyUnusedLocal
