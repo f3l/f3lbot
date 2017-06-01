@@ -41,10 +41,11 @@ CONFIG_TEMPLATES = {
 
 
 class Cite:
-    def __init__(self, cite_id=0, cite="",
+    # noinspection PyShadowingBuiltins
+    def __init__(self, id=0, cite="",
                  added="", addedby="",
                  changed="", changedby=""):
-        self.cite_id = cite_id
+        self.cite_id = id
         self.cite = self.__needsdecode(cite)
         self.added = self.__needsdecode(added)
         self.addedby = self.__needsdecode(addedby)
@@ -145,7 +146,7 @@ class CiteSqlite:
             if answer:
                 # Extract Infos from reply
                 return Cite(
-                    cite_id=answer[0],
+                    id=answer[0],
                     cite=answer[1],
                     added=answer[2],
                     addedby=answer[3],
@@ -162,7 +163,7 @@ class CiteSqlite:
         if answer and len(answer) == 6:
             # Extract Infos from reply
             return Cite(
-                cite_id=answer[0],
+                id=answer[0],
                 cite=answer[1],
                 added=answer[2],
                 addedby=answer[3],
