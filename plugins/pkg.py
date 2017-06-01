@@ -16,9 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# noinspection PyUnresolvedReferences
 from errbot import BotPlugin, botcmd
-# noinspection PyUnresolvedReferences
 from urllib.parse import urlencode  # For UTF8 support
 import requests
 
@@ -77,10 +75,10 @@ class Pkg(BotPlugin):
 
         returns: Array of dicts with "name", "desc" and "repo"="aur"
         """
-        retval = []
+        aur_dict_list = []
         for i in json['results']:
-            retval.append(self.__parse_aur_single(i))
-        return retval
+            aur_dict_list.append(self.__parse_aur_single(i))
+        return aur_dict_list
 
     @staticmethod
     def __parse_aur_single(json):

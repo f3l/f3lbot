@@ -65,10 +65,10 @@ class Give(BotPlugin):
         Returns:
           String for end-of-sentence-use
         """
-        str = args[0]
+        answer_string = args[0]
         for i in range(2, 2*num, 2):
-            str += " and " + args[i]
-        return str
+            answer_string += " and " + args[i]
+        return answer_string
 
     @botcmd(split_args_with=None)
     def beer(self, msg, args):

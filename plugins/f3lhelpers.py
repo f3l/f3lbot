@@ -19,7 +19,8 @@
 
 def peer_account_name(msg):
     """Returns the Nick of the sender of a message"""
-    if msg.type == 'groupchat':
+    assert msg
+    if msg.is_group:
         return msg.frm.resource  # pragma: no cover
     else:
         return msg.frm.nick
@@ -34,6 +35,7 @@ def dialog_test(bot, msg, exp):
     """
     bot.push_message(msg)
     result = bot.pop_message()
+    print(result)
     assert result == exp
 
 

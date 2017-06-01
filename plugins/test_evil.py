@@ -21,7 +21,7 @@ from errbot.backends.test import testbot
 from f3lhelpers import dialog_test, get_plugin
 
 
-# noinspection PyClassHasNoInit
+# noinspection PyClassHasNoInit,PyShadowingNames
 class TestEvil:
     extra_plugin_dir = "."
 

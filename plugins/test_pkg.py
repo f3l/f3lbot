@@ -21,7 +21,7 @@ from errbot.backends.test import testbot
 from f3lhelpers import dialog_test, dialog_contains_test, get_plugin
 
 
-# noinspection PyClassHasNoInit
+# noinspection PyClassHasNoInit,PyShadowingNames
 class TestPkg:
     extra_plugin_dir = "."
 
@@ -68,15 +68,15 @@ Also just testing'
     def test_parse_aur_multi(self, testbot):
         # Multiple returns
         plugin = get_plugin(testbot, 'Pkg')
-        input = plugin._Pkg__query_aur('pheerai', 'msearch')
-        result = plugin._Pkg__parse_aur_multi(input)
+        test_input = plugin._Pkg__query_aur('pheerai', 'msearch')
+        result = plugin._Pkg__parse_aur_multi(test_input)
         assert type(result) is list \
             and type(result[1]) is dict \
             and type(result[1]["name"]) is str
         # Single return
         plugin = get_plugin(testbot, 'Pkg')
-        input = plugin._Pkg__query_aur('x32edit', 'info')
-        result = plugin._Pkg__parse_aur_single(input["results"])
+        test_input = plugin._Pkg__query_aur('x32edit', 'info')
+        result = plugin._Pkg__parse_aur_single(test_input["results"])
         assert type(result) is dict \
             and type(result["name"]) is str
 
