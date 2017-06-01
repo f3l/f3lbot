@@ -19,13 +19,9 @@
 # noinspection PyUnresolvedReferences
 from typing import Mapping
 from collections import namedtuple
-from errbot import BotPlugin, botcmd
-# noinspection PyUnresolvedReferences
-from errbot.utils import ValidationException
+from errbot import BotPlugin, botcmd, ValidationException
 
 from f3lhelpers import peer_account_name
-# noinspection PyUnresolvedReferences
-import json
 
 citesystemdata = namedtuple('citesystemdata',
                             ['host', 'port', 'base_url'])
@@ -293,7 +289,8 @@ a valid index?"
             return "Invalid usage. You must add a quote"
         else:
             quote = args
-            added = self.get_db().add_cite(cite=quote, name=peer_account_name(msg))
+            added = self.get_db() \
+                        .add_cite(cite=quote, name=peer_account_name(msg))
             return added
             # if added == 1:
             #     return "Sucessfully added the quote"
@@ -322,17 +319,28 @@ a valid index?"
             # Allow resetting the configuration.
             pass
         if configuration.get("USE_F3LCITES") is None:
-            raise ValidationException('The variable "USE_F3LCITES" must be set!')
+            raise ValidationException(
+                'The variable "USE_F3LCITES" must be set!'
+            )
         if configuration.get("USE_F3LCITES") in ["True", "true"]:
-            # Check for each variable if it is set, and raise if it is not set OR provided.
+            # Check for each variable if it is set,
+            # raise if it is not set OR provided.
             if configuration.get("F3LCITES_HOST") is None:
-                raise ValidationException('The variable "F3LCITES_HOST" not provided.')
+                raise ValidationException(
+                    'The variable "F3LCITES_HOST" not provided.'
+                )
             if configuration.get("F3LCITES_PORT") is None:
-                raise ValidationException('The variable "F3LCITES_PORT" not provided.')
+                raise ValidationException(
+                    'The variable "F3LCITES_PORT" not provided.'
+                )
             if configuration.get("F3LCITES_BASE_URL") is None:
-                raise ValidationException('The variable "F3LCITES_BASE_URL" not provided.')
+                raise ValidationException(
+                    'The variable "F3LCITES_BASE_URL" not provided.'
+                )
             pass
         else:
             if configuration.get("DB_PATH") is None:
-                raise ValidationException('The variable "DB_PATH" must be configured!')
+                raise ValidationException(
+                    'The variable "DB_PATH" must be configured!'
+                )
             pass
