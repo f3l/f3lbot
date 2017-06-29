@@ -1,3 +1,5 @@
+The suite of plugins used for F3Ls XMPP Bot have been moved to [F3L Git](https://git.f3l.de/f3lbot). There won't be any further development in this repo :exclamation:
+
 # F3LBot #
 
 A collection of ErrBot-Extensions made for F3L.
